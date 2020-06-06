@@ -50,3 +50,4 @@ exports.default = {
     */
     maxAge: 90,
 };
+//# sourceMappingURL=cors.js.map

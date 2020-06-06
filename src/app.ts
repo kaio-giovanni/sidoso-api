@@ -6,23 +6,31 @@ import parserConfig from './config/bodyParser';
 import corsConfig from './config/cors';
 
 class App {
-    public express: express.Application;
+    private express: express.Application;
 
+    // constructor method
     constructor(){
         this.express = express();
         this.middlewares();
         this.routes();
     }
 
+    // returns express object
+    public getExpress() {
+        return this.express;
+    }
+
+    // middlewares
     private middlewares():void {
         this.express.use(cors(corsConfig));
         this.express.use(bodyParser.json(parserConfig.json));
         this.express.use(bodyParser.urlencoded(parserConfig.urlencoded));
     }
 
+    // routes
     private routes(): void {
         this.express.use(routes);
     }
 }
-export default new App().express;
+export default new App().getExpress();
 
