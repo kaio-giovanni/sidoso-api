@@ -9,21 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-class Paciente {
-    // get pacientes
+class PacienteController {
+    // select * from pacientes where pacientes.is_active = '1'
     index(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const paciente = {
-                name: 'Francisco',
-                birth: '10/10/2000',
-                cpf: '000.000.000-00',
-                genrer: 'Masculino',
-                phone_main: '(000) 00000-0000',
-                phone_secondary: '(000) 00000-0000',
-                email: 'francisco@gmail.com',
-                password: 'AKCBSLILEKJLSLKCLKSAJLKDSA'
-            };
-            return res.json(paciente);
+        });
+    }
+    // get paciente by id
+    getById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+        });
+    }
+    // login paciente
+    login(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
         });
     }
     // create a new paciente
@@ -36,11 +35,11 @@ class Paciente {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
-    // delete a paciente
+    // set paciente.is_active to false
     destroy(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
         });
     }
 }
-exports.default = Paciente;
+exports.default = PacienteController;
 //# sourceMappingURL=PacienteController.js.map

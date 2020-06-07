@@ -1,20 +1,21 @@
 import { Request, Response } from 'express';
+import { Paciente } from '../models/Paciente'
 
-class Paciente {
+class PacienteController {
 
-    // get pacientes
+    // select * from pacientes where pacientes.is_active = '1'
     async index(req: Request, res: Response){
-        const paciente = {
-            name: 'Francisco',
-            birth: '10/10/2000',
-            cpf: '000.000.000-00',
-            genrer: 'Masculino',
-            phone_main: '(000) 00000-0000',
-            phone_secondary: '(000) 00000-0000',
-            email: 'francisco@gmail.com',
-            password: 'AKCBSLILEKJLSLKCLKSAJLKDSA'
-        };
-        return res.json(paciente);
+        
+    }
+
+    // get paciente by id
+    async getById(req: Request, res: Response){
+        
+    }
+
+    // login paciente
+    async login(req: Request, res: Response){
+
     }
 
     // create a new paciente
@@ -27,10 +28,10 @@ class Paciente {
 
     }
 
-    // delete a paciente
+    // set paciente.is_active to false
     async destroy(req: Request, res: Response){
-
+        
     }
 }
 
-export default Paciente;
+export default PacienteController;

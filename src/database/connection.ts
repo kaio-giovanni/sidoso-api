@@ -2,17 +2,17 @@ import { Connection, createConnection } from 'typeorm';
 import dbConfig from '../config/database';
 
 class DBConnection {
-    private static conn: Promise<Connection>;
+    private static conn: Connection;
 
     constructor(){}
 
-    static getInstance(): Promise<Connection> {
+    static async getInstance(): Promise<Connection> {
         if(DBConnection.conn === null){
-            DBConnection.conn = createConnection(dbConfig)
+            DBConnection.conn = await createConnection(dbConfig);
         }
         return DBConnection.conn;
     }
 }
 
-export default DBConnection;
+export default DBConnection.getInstance();
 

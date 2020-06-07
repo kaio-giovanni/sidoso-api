@@ -20,7 +20,7 @@ class App {
     getExpress() {
         return this.express;
     }
-    // middlewares
+    // global middlewares
     middlewares() {
         this.express.use(cors_1.default(cors_2.default));
         this.express.use(body_parser_1.default.json(bodyParser_1.default.json));

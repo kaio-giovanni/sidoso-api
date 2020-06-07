@@ -7,9 +7,15 @@ const express_1 = require("express");
 const PacienteController_1 = __importDefault(require("./controllers/PacienteController"));
 const routes = express_1.Router();
 const pacienteController = new PacienteController_1.default();
+// home page (Does not need authentication)
 routes.get('/', (req, res) => {
     return res.json({ title: 'Hello World' });
 });
-routes.get('/pacientes', pacienteController.index);
+// register a new paciente
+routes.post('/register/pacientes', pacienteController.store);
+// login paciente
+routes.post('/login/pacientes', pacienteController.login);
+// home page paciente
+routes.get('/pacientes/:id', pacienteController.getById);
 exports.default = routes;
 //# sourceMappingURL=routes.js.map

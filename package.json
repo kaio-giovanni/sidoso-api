@@ -1,12 +1,13 @@
 {
   "name": "sidoso-api",
   "version": "1.0.0",
-  "description": "Create back-end of sidoso project",
+  "description": "Create back-end of S-idoso project",
   "readmeFilename": "README.md",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:server": "ts-node-dev --respawn --transpileOnly src/server.ts"
+    "dev:server": "ts-node-dev --respawn --transpileOnly src/server.ts",
+    "dev:typeorm":"ts-node-dev ./node_modules/typeorm/cli.js"
   },
   "author": {
     "name": "Kaio giovanni",
@@ -30,6 +31,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "mysql2": "^2.1.0",
     "typeorm": "^0.2.25"
   }
 }

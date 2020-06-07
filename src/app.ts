@@ -20,7 +20,7 @@ class App {
         return this.express;
     }
 
-    // middlewares
+    // global middlewares
     private middlewares():void {
         this.express.use(cors(corsConfig));
         this.express.use(bodyParser.json(parserConfig.json));

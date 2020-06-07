@@ -8,8 +8,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 // Loads .env file into process.env
 dotenv_1.default.config();
 const app_port = process.env.PORT;
-const app_url = process.env.APP_URL;
+const app_host = process.env.HOST;
 app_1.default.listen(app_port, () => {
-    console.log(`Server is running in : ${app_url}`);
+    console.log(`Server is running in : ${app_host}:${app_port}`);
 });
 //# sourceMappingURL=server.js.map

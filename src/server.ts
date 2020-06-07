@@ -8,4 +8,4 @@ const app_host  = process.env.HOST;
 
 app.listen(app_port, () => {
     console.log(`Server is running in : ${ app_host }:${ app_port }`); 
-});
+}); 
