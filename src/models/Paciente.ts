@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import bcrypt from 'bcryptjs';
 
 export enum Genre { // Genre: Masculino | Feminino
     Masculino = "M",
@@ -14,7 +15,7 @@ export class Paciente {
 
     /* paciente is active? */
     @Column({
-        name: "is_active", type: "bit", default: "1", nullable: false
+        name: "is_active", type: "boolean", default: "1", nullable: false
     })
     is_active!: boolean;
 
@@ -62,7 +63,7 @@ export class Paciente {
 
     /* password */
     @Column({
-        name: "password", type: "varchar", length: 20, nullable: false, unique: false
+        name: "password", type: "varchar", length: 80, nullable: false, unique: false
     })
     password!: string;
 
@@ -77,5 +78,14 @@ export class Paciente {
         name: "update_at", type: "timestamp", nullable: true, unique: false
     })
     update_at!: Date;
+
+    @BeforeInsert()
+    hashPassword(){
+        this.password = bcrypt.hashSync(this.password, 8);
+    }
+
+    async checkPassword(noCryptpassword: string){
+        return await bcrypt.compare(noCryptpassword, this.password);
+    }
 
 }

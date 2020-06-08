@@ -7,7 +7,7 @@ class DBConnection {
     constructor(){}
 
     static async getInstance(): Promise<Connection> {
-        if(DBConnection.conn === null){
+        if(DBConnection.conn === undefined){
             DBConnection.conn = await createConnection(dbConfig);
         }
         return DBConnection.conn;
