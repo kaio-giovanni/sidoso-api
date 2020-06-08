@@ -35,21 +35,21 @@ class PacienteController {
                 return res.status(401).send({ error: "User (paciente) not found" });
             }
 
-            if(!paciente.checkPassword(password)){
+            if(await paciente.checkPassword(password) === false){
                 return res.status(401).send({ error: "Password is incorrect" });
             }
 
             // generate token 
             const token = jwt.sign({pacienteId: paciente.id, email: paciente.email}, 
-                authConfig.secret_key+"",
+                ""+ authConfig.secret_key,
                 {
                     expiresIn: authConfig.expiresIn
                 });
 
-            res.setHeader("authorization", token);
+            res.setHeader("authorization", "sidoso "+token);
             return res.status(200).send(paciente); 
         }).catch(error => {
-            return res.status(400).send({ error });
+            return res.status(406).send({ error });
         });
     }
 
@@ -75,13 +75,13 @@ class PacienteController {
 
                 await pacienteRepository.save(paciente);
 
-                return res.status(200).send({ success: true});
+                return res.status(201).send({ success: true});
             }catch(error){
-                return res.status(401).send(error);
+                return res.status(400).send(error);
             }
 
         }).catch(error => {
-            return res.status(400).send({ error });
+            return res.status(406).send({ error });
         });
     }
 
