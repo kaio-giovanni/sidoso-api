@@ -35,7 +35,7 @@ class PacienteController {
                 return res.status(401).send({ error: "User (paciente) not found" });
             }
 
-            if(await paciente.checkPassword(password) === false){
+            if(!await paciente.checkPassword(password)){
                 return res.status(401).send({ error: "Password is incorrect" });
             }
 

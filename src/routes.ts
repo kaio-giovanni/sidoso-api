@@ -6,7 +6,9 @@ const routes = Router();
 const pacienteController = new PacienteController();
 
 // home page (Does not need authentication)
-routes.get('/', pacienteController.index);
+routes.get('/', (req, res) => {
+    return res.status(200).send({ page: "home page sidoso"});
+});
 
 // register a new paciente
 routes.post('/register/pacientes', pacienteController.store);
