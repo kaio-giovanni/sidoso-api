@@ -45,7 +45,7 @@ __decorate([
 ], Paciente.prototype, "id", void 0);
 __decorate([
     typeorm_1.Column({
-        name: "is_active", type: "bit", default: "1", nullable: false
+        name: "is_active", type: "boolean", default: "1", nullable: false
     }),
     __metadata("design:type", Boolean)
 ], Paciente.prototype, "is_active", void 0);
@@ -93,7 +93,7 @@ __decorate([
 ], Paciente.prototype, "email", void 0);
 __decorate([
     typeorm_1.Column({
-        name: "password", type: "varchar", length: 20, nullable: false, unique: false
+        name: "password", type: "varchar", length: 80, nullable: false, unique: false
     }),
     __metadata("design:type", String)
 ], Paciente.prototype, "password", void 0);

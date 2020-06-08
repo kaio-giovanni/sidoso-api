@@ -24,9 +24,10 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
         return res.status(401).send({ error: "Token malformatted" });
     }
 
-    jwt.verify(token, ""+authConfig.secret_key, (err, decoded) => {
+    jwt.verify(token, ""+authConfig.secret_key, (err, decoded: any) => {
         if(err) return res.status(401).send({ error: "Token invalid" });
 
+        // veridication -> token need to be unique to user
         return next();
     });
 }

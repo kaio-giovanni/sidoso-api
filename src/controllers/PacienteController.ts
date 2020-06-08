@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
 import { Paciente } from '../models/Paciente';
 import jwt from 'jsonwebtoken';
 import authConfig from '../config/auth';
@@ -14,7 +13,22 @@ class PacienteController {
 
     // get paciente by id
     async getById(req: Request, res: Response){
-        return res.json({ name: "getById", success: true});
+        connection.then(async conn => {
+            const id = req.params.id;
+
+            const pacienteRepository = conn.getRepository(Paciente);
+
+            let paciente: Paciente;
+            try{
+                paciente = await pacienteRepository.findOneOrFail({ where: { id } });
+            }catch(error){
+                return res.status(401).send({ error: "User (paciente) not found" });
+            }
+
+            return res.status(200).send(paciente); 
+        }).catch((error) => {
+            return res.status(406).send({ error });
+        });
     }
 
     // login paciente
@@ -40,7 +54,7 @@ class PacienteController {
             }
 
             // generate token 
-            const token = jwt.sign({pacienteId: paciente.id, email: paciente.email}, 
+            const token = jwt.sign({id: paciente.id, email: paciente.email}, 
                 ""+ authConfig.secret_key,
                 {
                     expiresIn: authConfig.expiresIn

@@ -9,7 +9,9 @@ const PacienteController_1 = __importDefault(require("./controllers/PacienteCont
 const routes = express_1.Router();
 const pacienteController = new PacienteController_1.default();
 // home page (Does not need authentication)
-routes.get('/', pacienteController.index);
+routes.get('/', (req, res) => {
+    return res.status(200).send({ page: "home page sidoso" });
+});
 // register a new paciente
 routes.post('/register/pacientes', pacienteController.store);
 // login paciente

@@ -18,7 +18,7 @@ class DBConnection {
     constructor() { }
     static getInstance() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (DBConnection.conn === null) {
+            if (DBConnection.conn === undefined) {
                 DBConnection.conn = yield typeorm_1.createConnection(database_1.default);
             }
             return DBConnection.conn;
