@@ -27,18 +27,23 @@ class PacienteController {
     getById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             connection_1.default.then((conn) => __awaiter(this, void 0, void 0, function* () {
-                const id = req.params.id;
+                const { userId, role } = req.body.userToken;
+                if (!role || role !== auth_1.default.role.PACIENTE)
+                    res.status(403).send({ error: "Permission not granted", message: "Access denied !" });
                 const pacienteRepository = conn.getRepository(Paciente_1.Paciente);
                 let paciente;
                 try {
-                    paciente = yield pacienteRepository.findOneOrFail({ where: { id } });
+                    paciente = yield pacienteRepository.findOneOrFail({ where: { id: userId } });
                 }
                 catch (error) {
-                    return res.status(401).send({ error: "User (paciente) not found" });
+                    return res.status(401).send({
+                        error: "User not found",
+                        message: error
+                    });
                 }
                 return res.status(200).send(paciente);
             })).catch((error) => {
-                return res.status(406).send({ error });
+                return res.status(406).send({ error: "User not found", message: error });
             });
         });
     }
@@ -48,7 +53,10 @@ class PacienteController {
             connection_1.default.then((conn) => __awaiter(this, void 0, void 0, function* () {
                 const { email, password } = req.body;
                 if (!(email && password)) {
-                    return res.status(400).send({ error: "email and password field are required" });
+                    return res.status(400).send({
+                        error: "User not found",
+                        message: "Email and password field are required"
+                    });
                 }
                 const pacienteRepository = conn.getRepository(Paciente_1.Paciente);
                 // get user from database
@@ -57,19 +65,30 @@ class PacienteController {
                     paciente = yield pacienteRepository.findOneOrFail({ where: { email } });
                 }
                 catch (error) {
-                    return res.status(401).send({ error: "User (paciente) not found" });
+                    return res.status(401).send({
+                        error: "User not found",
+                        message: "Please, make sure you entered you email correctly"
+                    });
                 }
                 if (!(yield paciente.checkPassword(password))) {
-                    return res.status(401).send({ error: "Password is incorrect" });
+                    return res.status(401).send({
+                        error: "Password is incorrect",
+                        message: "Please, make sure you entered your password correctly"
+                    });
                 }
-                // generate token 
-                const token = jsonwebtoken_1.default.sign({ id: paciente.id, email: paciente.email }, "" + auth_1.default.secret_key, {
+                // generate token with unique user information
+                const token = jsonwebtoken_1.default.sign({
+                    userId: paciente.id,
+                    email: paciente.email,
+                    cpf: paciente.cpf,
+                    role: auth_1.default.role.PACIENTE
+                }, "" + auth_1.default.secret_key, {
                     expiresIn: auth_1.default.expiresIn
                 });
                 res.setHeader("authorization", "sidoso " + token);
                 return res.status(200).send(paciente);
             })).catch(error => {
-                return res.status(406).send({ error });
+                return res.status(406).send({ error: "Login error", mesage: error });
             });
         });
     }
@@ -93,10 +112,10 @@ class PacienteController {
                     return res.status(201).send({ success: true });
                 }
                 catch (error) {
-                    return res.status(400).send(error);
+                    return res.status(400).send({ error: "Register error", message: error });
                 }
             })).catch(error => {
-                return res.status(406).send({ error });
+                return res.status(406).send({ error: "Register error", message: error });
             });
         });
     }

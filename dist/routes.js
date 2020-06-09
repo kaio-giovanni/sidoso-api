@@ -12,11 +12,13 @@ const pacienteController = new PacienteController_1.default();
 routes.get('/', (req, res) => {
     return res.status(200).send({ page: "home page sidoso" });
 });
+/* --------------------PACIENTE ROUTES-------------------- */
 // register a new paciente
 routes.post('/register/pacientes', pacienteController.store);
 // login paciente
 routes.post('/login/pacientes', pacienteController.login);
 // home page paciente
 routes.get('/pacientes/:id', [auth_1.default], pacienteController.getById);
+/* --------------------PROFISSIONAL ROUTES-------------------- */
 exports.default = routes;
 //# sourceMappingURL=routes.js.map

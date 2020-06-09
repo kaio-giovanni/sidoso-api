@@ -14,26 +14,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const auth_1 = __importDefault(require("../config/auth"));
-/** status code http
- * { 200: ok, 201: created, 400: bad request, 401: unauthenticated, 403: Forbidden, 404: not found, 406: not acceptable
+/**
+ * Check token
  */
 const authentication = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).send({ error: "No token provided" });
+        return res.status(401).send({ error: "Authentication failed", message: "No token provided" });
     }
     const parts = authHeader.split(" ");
     if (!(parts.length === 2)) {
-        return res.status(401).send({ error: "Token error parts" });
+        return res.status(401).send({ error: "Authentication failed", message: "Token error parts" });
     }
     const [scheme, token] = parts;
     if (!/^sidoso$/i.test(scheme)) {
-        return res.status(401).send({ error: "Token malformatted" });
+        return res.status(401).send({ error: "Authentication failed", message: "Token malformatted" });
     }
     jsonwebtoken_1.default.verify(token, "" + auth_1.default.secret_key, (err, decoded) => {
         if (err)
-            return res.status(401).send({ error: "Token invalid" });
-        // veridication -> token need to be unique to user
+            return res.status(401).send({ error: "Token invalid", message: err });
+        if (req.params.id != decoded.userId)
+            return res.status(403).send({ error: "Authentication failed", message: "Access denied" });
+        req.body.userToken = decoded;
         return next();
     });
 });
