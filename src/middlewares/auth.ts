@@ -2,8 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import authConfig from '../config/auth';
 
-/** status code http
- * { 200: ok, 201: created, 400: bad request, 401: unauthenticated, 403: Forbidden, 404: not found, 406: not acceptable
+/** 
+ * Check token 
  */
 
 const authentication = async (req: Request, res: Response, next: NextFunction) => {
@@ -11,23 +11,26 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
     const authHeader = req.headers.authorization;
 
     if(!authHeader){
-        return res.status(401).send({ error: "No token provided"});
+        return res.status(401).send({ error: "Authentication failed", message: "No token provided" });
     }
 
     const parts = authHeader.split(" ");
     if(!(parts.length === 2)){
-        return res.status(401).send({ error: "Token error parts" });
+        return res.status(401).send({ error: "Authentication failed", message: "Token error parts" });
     }
 
     const [ scheme, token ] = parts;
     if(!/^sidoso$/i.test(scheme)){
-        return res.status(401).send({ error: "Token malformatted" });
+        return res.status(401).send({ error: "Authentication failed", message: "Token malformatted" });
     }
 
     jwt.verify(token, ""+authConfig.secret_key, (err, decoded: any) => {
-        if(err) return res.status(401).send({ error: "Token invalid" });
+        if(err) return res.status(401).send({ error: "Token invalid", message: err });
 
-        // veridication -> token need to be unique to user
+        if(req.params.id != decoded.userId) 
+            return res.status(403).send({ error: "Authentication failed", message: "Access denied" });
+        
+        req.body.userToken = decoded;
         return next();
     });
 }
