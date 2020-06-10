@@ -14,26 +14,28 @@ class PacienteController {
     // get paciente by id
     async getById(req: Request, res: Response){
         connection.then(async conn => {
-            const {userId, role} = req.body.userToken;
+            const userId = req.params.id;
+            const role = req.headers.authorization;
 
-            if(!role || role !== authConfig.role.PACIENTE) 
-                res.status(403).send({ error: "Permission not granted", message: "Access denied !" });
-
+            if(!role || role !== authConfig.role.PACIENTE){
+                res.status(403).send({
+                    error: "Permission not granted",
+                    message: "Access denied ! unsupported role"
+                });
+            }
+            
             const pacienteRepository = conn.getRepository(Paciente);
-
-            let paciente: Paciente;
             try{
-                paciente = await pacienteRepository.findOneOrFail({ where: { id: userId } });
+                const paciente = await pacienteRepository.findOneOrFail({ where: { id: userId } });
+                return res.status(200).send(paciente); 
             }catch(error){
                 return res.status(401).send({
                     error: "User not found",
                     message: error
                 });
             }
-
-            return res.status(200).send(paciente); 
         }).catch((error) => {
-            return res.status(406).send({ error: "User not found", message: error });
+            return res.status(406).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -48,9 +50,8 @@ class PacienteController {
                     message: "Email and password field are required"
                 });
             }
-            const pacienteRepository = conn.getRepository(Paciente);
 
-            // get user from database
+            const pacienteRepository = conn.getRepository(Paciente);
             let paciente: Paciente;
             try{
                 paciente = await pacienteRepository.findOneOrFail({ where: { email } });
@@ -83,18 +84,16 @@ class PacienteController {
             res.setHeader("authorization", "sidoso "+token);
             return res.status(200).send(paciente); 
         }).catch(error => {
-            return res.status(406).send({ error: "Login error", mesage: error });
+            return res.status(406).send({ error: "An error has occurred", mesage: error });
         });
     }
 
     // create a new paciente
     async store(req: Request, res: Response){
         connection.then(async conn => {
-
             const data = req.body;
 
             const pacienteRepository = conn.getRepository(Paciente);
-
             const paciente = pacienteRepository.create();
             
             try{
@@ -111,17 +110,45 @@ class PacienteController {
 
                 return res.status(201).send({ success: true});
             }catch(error){
-                return res.status(400).send({ error: "Register error", message: error });
+                return res.status(400).send({ error: "Registration failure", message: error });
             }
 
         }).catch(error => {
-            return res.status(406).send({ error: "Register error", message: error });
+            return res.status(406).send({ error: "An error has occurred", message: error });
         });
     }
 
     // update a paciente
     async update(req: Request, res: Response){
+        connection.then(async conn => {
+            const userId = req.params.id;
+            const role = req.headers.authorization;
 
+            if(!role || role !== authConfig.role.PACIENTE){
+                res.status(403).send({
+                    error: "Permission not granted",
+                    message: "Access denied ! unsupported role"
+                });
+            }
+
+            const {
+                phone_main,
+                phone_secondary } = req.body;
+
+            const pacienteRepository = conn.getRepository(Paciente);
+            try{
+                const paciente = await pacienteRepository.update(userId, {
+                    phone_main, phone_secondary
+                });
+
+                return res.status(200).send(paciente.affected);
+            }catch(error){
+                return res.status(400).send({ error: "Editing failure", message: error });
+            }
+
+        }).catch(error => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
     }
 
     // set paciente.is_active to false

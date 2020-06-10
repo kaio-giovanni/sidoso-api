@@ -2,13 +2,13 @@
   "name": "sidoso-api",
   "version": "1.0.0",
   "description": "Create back-end of S-idoso project",
-  "readmeFilename": "README.md",
-  "main": "index.js",
+  "readme": "README.md",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:server": "ts-node-dev --respawn --transpileOnly src/server.ts",
     "dev:typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-    "typeorm:migration:gen": "ts-node-dev ./node_modules/typeorm/cli.js migration:generate -n"
+    "dev:migration-generate": "ts-node-dev ./node_modules/typeorm/cli.js migration:generate -n"
   },
   "author": {
     "name": "Kaio giovanni",

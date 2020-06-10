@@ -52,5 +52,10 @@ export default {
      Define Access-Control-Allow-Max-Age  
     */
     maxAge: 90,
+
+    /* ---- optionsSuccessStatus ----
+     Define status code success
+    */
+    optionsSuccessStatus: 200
   }
   

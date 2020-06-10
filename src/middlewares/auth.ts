@@ -30,7 +30,7 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
         if(req.params.id != decoded.userId) 
             return res.status(403).send({ error: "Authentication failed", message: "Access denied" });
         
-        req.body.userToken = decoded;
+        req.headers.authorization = decoded.role;
         return next();
     });
 }

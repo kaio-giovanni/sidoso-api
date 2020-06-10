@@ -21,6 +21,9 @@ routes.post('/login/pacientes', pacienteController.login);
 // home page paciente
 routes.get('/pacientes/:id', [authentication], pacienteController.getById);
 
+// edit paciente
+routes.patch('/pacientes/:id/edit', [authentication], pacienteController.update);
+
 /* --------------------PROFISSIONAL ROUTES-------------------- */
 
 export default routes;

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import bcrypt from 'bcryptjs';
 
 export enum Genre { // Genre: Masculino | Feminino
@@ -68,15 +68,11 @@ export class Paciente {
     password!: string;
 
     /* create date */
-    @Column({
-        name: "create_at", type: "timestamp", nullable: false, unique: false, default: () => 'CURRENT_TIMESTAMP'
-    })
+    @CreateDateColumn()
     create_at!: Date;
 
     /* updating date */
-    @Column({
-        name: "update_at", type: "timestamp", nullable: true, unique: false
-    })
+    @UpdateDateColumn()
     update_at!: Date;
 
     @BeforeInsert()

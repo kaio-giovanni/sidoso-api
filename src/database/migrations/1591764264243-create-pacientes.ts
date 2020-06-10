@@ -1,10 +1,11 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class createPacientes1591580696942 implements MigrationInterface {
-    name = 'createPacientes1591580696942'
+export class createPacientes1591764264243 implements MigrationInterface {
+    name = 'createPacientes1591764264243'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query("CREATE TABLE `pacientes` (`id` int NOT NULL AUTO_INCREMENT," + 
+        await queryRunner.query("CREATE TABLE `pacientes`" + 
+        " (`id` int NOT NULL AUTO_INCREMENT," + 
         " `is_active` tinyint NOT NULL DEFAULT '1'," + 
         " `name` varchar(80) NOT NULL," + 
         " `birth` date NOT NULL," + 
@@ -14,8 +15,8 @@ export class createPacientes1591580696942 implements MigrationInterface {
         " `phone_secondary` varchar(16) NULL," + 
         " `email` varchar(60) NOT NULL," + 
         " `password` varchar(80) NOT NULL," + 
-        " `create_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," + 
-        " `update_at` timestamp NULL," + 
+        " `create_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)," + 
+        " `update_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)," + 
         " UNIQUE INDEX `IDX_d6737b831d4e311678dfce056b` (`cpf`)," + 
         " UNIQUE INDEX `IDX_9b1d1c80bdf7c29c7187ef8939` (`email`)," + 
         " PRIMARY KEY (`id`)) ENGINE=InnoDB");
