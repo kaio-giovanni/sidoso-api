@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import authentication from './middlewares/auth';
+import AdminController from './controllers/AdminController';
 import PacienteController from './controllers/PacienteController';
 
 const routes = Router();
+const adminController = new AdminController();
 const pacienteController = new PacienteController();
 
 // home page (Does not need authentication)
@@ -25,5 +27,11 @@ routes.get('/pacientes/:id', [authentication], pacienteController.getById);
 routes.patch('/pacientes/:id/edit', [authentication], pacienteController.update);
 
 /* --------------------PROFISSIONAL ROUTES-------------------- */
+
+
+/* --------------------ADMIN ROUTES-------------------- */
+
+// register a new admin (Need pre-authentication )
+routes.post('/admin/:id/register', [authentication], adminController.store);
 
 export default routes;

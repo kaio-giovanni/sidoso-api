@@ -1,24 +1,23 @@
 import { Request, Response } from 'express';
 import { Paciente } from '../models/Paciente';
-import jwt from 'jsonwebtoken';
-import authConfig from '../config/auth';
+import { TokenJwt } from '../authentication/TokenJwt';
 import connection from '../database/connection';
 
 class PacienteController {
 
     // select * from pacientes where pacientes.is_active = '1'
-    async index(req: Request, res: Response){
+    public index(req: Request, res: Response){
         return res.send({ name: "index", success: true});
     }
 
     // get paciente by id
-    async getById(req: Request, res: Response){
+    public getById(req: Request, res: Response){
         connection.then(async conn => {
             const userId = req.params.id;
             const role = req.headers.authorization;
 
-            if(!role || role !== authConfig.role.PACIENTE){
-                res.status(403).send({
+            if(!role || role !== TokenJwt.role.PACIENTE){
+                return res.status(403).send({
                     error: "Permission not granted",
                     message: "Access denied ! unsupported role"
                 });
@@ -40,7 +39,7 @@ class PacienteController {
     }
 
     // login paciente
-    async login(req: Request, res: Response){
+    public login(req: Request, res: Response){
         connection.then(async conn => {
             const { email, password } = req.body;
 
@@ -70,18 +69,14 @@ class PacienteController {
             }
 
             // generate token with unique user information
-            const token = jwt.sign({
-                userId: paciente.id,
-                email: paciente.email,
-                cpf: paciente.cpf,
-                role: authConfig.role.PACIENTE
-            },
-            ""+ authConfig.secret_key,
-            {                
-                expiresIn: authConfig.expiresIn
-            });
+            const token = TokenJwt.generateToken(
+                paciente.id,
+                paciente.email,
+                paciente.cpf,
+                TokenJwt.role.PACIENTE
+            );
 
-            res.setHeader("authorization", "sidoso "+token);
+            res.setHeader("authorization", token);
             return res.status(200).send(paciente); 
         }).catch(error => {
             return res.status(406).send({ error: "An error has occurred", mesage: error });
@@ -89,7 +84,7 @@ class PacienteController {
     }
 
     // create a new paciente
-    async store(req: Request, res: Response){
+    public store(req: Request, res: Response){
         connection.then(async conn => {
             const data = req.body;
 
@@ -119,13 +114,13 @@ class PacienteController {
     }
 
     // update a paciente
-    async update(req: Request, res: Response){
+    public update(req: Request, res: Response){
         connection.then(async conn => {
             const userId = req.params.id;
             const role = req.headers.authorization;
 
-            if(!role || role !== authConfig.role.PACIENTE){
-                res.status(403).send({
+            if(!role || role !== TokenJwt.role.PACIENTE){
+                return res.status(403).send({
                     error: "Permission not granted",
                     message: "Access denied ! unsupported role"
                 });
@@ -141,7 +136,7 @@ class PacienteController {
                     phone_main, phone_secondary
                 });
 
-                return res.status(200).send(paciente.affected);
+                return res.status(200).send({ success: true });
             }catch(error){
                 return res.status(400).send({ error: "Editing failure", message: error });
             }
@@ -152,7 +147,7 @@ class PacienteController {
     }
 
     // set paciente.is_active to false
-    async destroy(req: Request, res: Response){
+    public destroy(req: Request, res: Response){
         
     }
 }
