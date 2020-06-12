@@ -13,16 +13,15 @@ class PacienteController {
     // get paciente by id
     public getById(req: Request, res: Response){
         connection.then(async conn => {
-            const userId = req.params.id;
-            const role = req.headers.authorization;
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
 
-            if(!role || role !== TokenJwt.role.PACIENTE){
-                return res.status(403).send({
-                    error: "Permission not granted",
-                    message: "Access denied ! unsupported role"
-                });
-            }
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            // set authorization header
+            res.setHeader("authorization", vrfyRole.body.userToken);
             
+            const userId = req.params.id;            
             const pacienteRepository = conn.getRepository(Paciente);
             try{
                 const paciente = await pacienteRepository.findOneOrFail({ where: { id: userId } });
@@ -116,16 +115,15 @@ class PacienteController {
     // update a paciente
     public update(req: Request, res: Response){
         connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            // set authorization header
+            res.setHeader("authorization", vrfyRole.body.userToken);
+            
             const userId = req.params.id;
-            const role = req.headers.authorization;
-
-            if(!role || role !== TokenJwt.role.PACIENTE){
-                return res.status(403).send({
-                    error: "Permission not granted",
-                    message: "Access denied ! unsupported role"
-                });
-            }
-
             const {
                 phone_main,
                 phone_secondary } = req.body;

@@ -22,7 +22,7 @@ export default {
         'application/json',
         'application/json-patch+json',
         'application/vnd.api+json',
-        'application/csp-report'
+        //'application/csp-report'
       ]
     },
   

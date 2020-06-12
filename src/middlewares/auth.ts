@@ -17,22 +17,30 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
         return res.status(401).send({ error: "Authentication failed", message: "Token error parts" });
     }
 
-    const [ scheme, token ] = parts;
+    let [ scheme, token ] = parts;
     if(!/^sidoso$/i.test(scheme)){
         return res.status(401).send({ error: "Authentication failed", message: "Token malformatted" });
     }
 
-    const result = TokenJwt.decodedToken(token);
+    const result = TokenJwt.decodedToken(token);// return error | decoded 
 
-    if(!result.success) 
-        return res.status(403).send({ error: "Authentication failed", message: result.body});
-
-    if(req.params.id != result.body.decoded.userId) 
-        return res.status(403).send({ error: "Authentication failed", message: "Access denied!" });
-    
-    req.headers.authorization = result.body.decoded.role;
-    return next();
-    
+    if(!result.success) {
+        if(result.body.name === "TokenExpiredError"){
+            // Refresh Token (?)
+            return res.status(403).send({ error: "Authentication failed", message: "Refresh token"});
+        }else{
+            // Invalid Token
+            return res.status(403).send({ error: "Authentication failed", message: result.body});
+        }
+    }else{
+        if(req.params.id != result.body.decoded.userId) 
+            return res.status(403).send({ error: "Authentication failed", message: "Access denied!" });
+        
+        // set authorization header: prefix + token + user role 
+        req.headers.authorization = TokenJwt.prefix + token + " " + result.body.decoded.role;
+        // go to next 
+        return next();
+    }
 }
 
 export default authentication;

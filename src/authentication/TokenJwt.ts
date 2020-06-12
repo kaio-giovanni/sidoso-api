@@ -43,8 +43,43 @@ export class TokenJwt {
         return value;
     }
 
-    public static refreshToken(token: string){
+    // usado depois do middleware de auth, para verificar userRole === decodedRole
+    public static verifyRole(authorization: string, role: Role): any{
+        // header authorization  
+        // authorization format: prefix + token + decodedRole
+        let value = { success: false, body: {} };
+        
+        if(authorization === undefined || authorization === null){
+            value = { success: false, body: {
+                error: "Authentication failed",
+                message: "Authorization header not found"
+            }};
+            return value;
+        }
+        const splitAuth = authorization.split(" ");
 
+        if(!(splitAuth.length === 3)){
+            value = { success: false, body: {
+                error: "Authentication failed",
+                message: "Authorization header malformatted"
+            }};
+            return value;
+        }
+        
+        const [prefix, token, decodedRole] = splitAuth;
+
+        if(decodedRole !== role){
+            value = { success: false, body: {
+                error: "Permission not granted",
+                message: "Access denied ! unsupported role"
+            }};
+            return value;
+        }
+
+        value = { success: true, body: {
+            userToken: this.prefix + token
+        }};
+
+        return value;
     }
-
 }

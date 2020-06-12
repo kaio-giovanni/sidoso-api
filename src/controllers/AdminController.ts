@@ -53,14 +53,13 @@ class AdminController {
     // create a new admin
     public store(req: Request, res: Response){
         connection.then(async conn => {
-            const role = req.headers.authorization;
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
-            if(!role || role !== TokenJwt.role.ADMIN){
-                return res.status(403).send({
-                    error: "Permission not granted",
-                    message: "Access denied ! unsupported role"
-                });
-            }
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            // set authorization header
+            res.setHeader("authorization", vrfyRole.body.userToken);
 
             const data = req.body;
 
