@@ -1,0 +1,19 @@
+{
+    "name": "default",
+    "type": "",
+    "host": "",
+    "port": 1234,
+    "username": "",
+    "password": "",
+    "database": "",
+    "entities": [
+      "src/models/**/*.ts"
+    ],
+    "migrations": [
+      "src/database/migrations/**/*.ts"
+    ],
+    "cli": {
+      "migrationsDir": "src/database/migrations"
+    },
+    "synchronize": false
+}

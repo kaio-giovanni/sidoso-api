@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Admin } from '../models/Admin';
+import { Paciente } from '../models/Paciente';
 import { TokenJwt } from '../authentication/TokenJwt';
 import connection from '../database/connection';
 
@@ -39,7 +40,6 @@ class AdminController {
             const token = TokenJwt.generateToken(
                 admin.id,
                 admin.email,
-                admin.cpf,
                 TokenJwt.role.ADMIN
            );
 
@@ -83,7 +83,32 @@ class AdminController {
         }).catch(error => {
             return res.status(406).send({ error: "An error has occurred", message: error });
         });
-    }    
+    }
+
+    // ----------------- GET ALL PACIENTES ----------------- //
+    
+    public getAllPacientes(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const pacienteRepository = conn.getRepository(Paciente);
+            try{
+                const paciente = await pacienteRepository.find({ where: { is_active: 1 } });
+                return res.status(200).send(paciente); 
+            }catch(error){
+                return res.status(401).send({
+                    error: "User not found",
+                    message: error
+                });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+    
 }
 
 export default AdminController;

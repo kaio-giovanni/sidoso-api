@@ -34,4 +34,10 @@ routes.patch('/pacientes/:id/edit', [authentication], pacienteController.update)
 // register a new admin (Need pre-authentication )
 routes.post('/admin/:id/register', [authentication], adminController.store);
 
+// login admin
+routes.post('/login/admin', adminController.login);
+
+// get all pacientes
+routes.get('/admin/:id/pacientes', [authentication], adminController.getAllPacientes);
+
 export default routes;

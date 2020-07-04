@@ -6,9 +6,11 @@
   "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev:server": "ts-node-dev --respawn --transpileOnly src/server.ts",
-    "dev:typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-    "dev:migration-generate": "ts-node-dev ./node_modules/typeorm/cli.js migration:generate -n"
+    "build": "tsc -w -diagnostics",
+    "dev:server": "ts-node-dev --respawn --transpileOnly --ignore-watch node_modules src/server.ts",
+    "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js ",
+    "create-migration": "ts-node-dev ./node_modules/typeorm/cli.js migration:generate -n",
+    "start": "node ./dist/server.js"
   },
   "author": {
     "name": "Kaio giovanni",

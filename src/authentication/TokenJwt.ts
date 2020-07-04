@@ -14,11 +14,10 @@ export class TokenJwt {
 
     constructor(){}
 
-    public static generateToken(id: number, email: string, cpf: string, role: Role): string{
+    public static generateToken(id: number, email: string, role: Role): string{
         const token = jwt.sign({
             userId: id,
             email,
-            cpf,
             role 
         },
         ""+ authConfig.secret_key,
