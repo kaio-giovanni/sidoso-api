@@ -36,53 +36,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var DBConnection = /** @class */ (function () {
-    function DBConnection() {
+exports.createAdmins1593790033841 = void 0;
+var createAdmins1593790033841 = /** @class */ (function () {
+    function createAdmins1593790033841() {
+        this.name = 'createAdmins1593790033841';
     }
-    DBConnection.getInstance = function () {
+    createAdmins1593790033841.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, ex_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!(DBConnection.conn === undefined)) return [3 /*break*/, 4];
-                        _b.label = 1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, queryRunner.query("CREATE TABLE `administrator` (" +
+                            " `id` int NOT NULL AUTO_INCREMENT," +
+                            " `name` varchar(80) NOT NULL," +
+                            " `birth` date NOT NULL," +
+                            " `cpf` varchar(15) NOT NULL," +
+                            " `email` varchar(60) NOT NULL," +
+                            " `password` varchar(80) NOT NULL," +
+                            " `create_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)," +
+                            " `update_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)," +
+                            " UNIQUE INDEX `IDX_3a6bce843d2e26412af70c00f0` (`cpf`)," +
+                            " UNIQUE INDEX `IDX_be0ce9bef56d5a30b9e5752564` (`email`)," +
+                            " PRIMARY KEY (`id`)) ENGINE=InnoDB")];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        _a = DBConnection;
-                        return [4 /*yield*/, typeorm_1.createConnection("default")];
-                    case 2:
-                        _a.conn = _b.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
-                        ex_1 = _b.sent();
-                        console.error(ex_1);
-                        return [3 /*break*/, 4];
-                    case 4:
-                        DBConnection.isConnected();
-                        return [2 /*return*/, DBConnection.conn];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    DBConnection.isConnected = function () {
-        var out = { msg: "", connected: false };
-        switch (DBConnection.conn) {
-            case undefined:
-                out = { msg: "Database ERROR: Connection object is undefined", connected: false };
-                break;
-            case null:
-                out = { msg: "Database ERROR: Connection object is null", connected: false };
-                break;
-            default:
-                out = { msg: "Database connection is active", connected: true };
-                break;
-        }
-        console.log(out);
-        return out;
+    createAdmins1593790033841.prototype.down = function (queryRunner) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, queryRunner.query("DROP INDEX `IDX_be0ce9bef56d5a30b9e5752564` ON `administrator`")];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.query("DROP INDEX `IDX_3a6bce843d2e26412af70c00f0` ON `administrator`")];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.query("DROP TABLE `administrator`")];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    return DBConnection;
+    return createAdmins1593790033841;
 }());
-exports.default = DBConnection.getInstance();
-//# sourceMappingURL=connection.js.map
+exports.createAdmins1593790033841 = createAdmins1593790033841;
+//# sourceMappingURL=1593790033841-create-admins.js.map

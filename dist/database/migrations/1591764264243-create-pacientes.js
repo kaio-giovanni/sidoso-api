@@ -36,53 +36,57 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
-var DBConnection = /** @class */ (function () {
-    function DBConnection() {
+exports.createPacientes1591764264243 = void 0;
+var createPacientes1591764264243 = /** @class */ (function () {
+    function createPacientes1591764264243() {
+        this.name = 'createPacientes1591764264243';
     }
-    DBConnection.getInstance = function () {
+    createPacientes1591764264243.prototype.up = function (queryRunner) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, ex_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!(DBConnection.conn === undefined)) return [3 /*break*/, 4];
-                        _b.label = 1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, queryRunner.query("CREATE TABLE `pacientes`" +
+                            " (`id` int NOT NULL AUTO_INCREMENT," +
+                            " `is_active` tinyint NOT NULL DEFAULT '1'," +
+                            " `name` varchar(80) NOT NULL," +
+                            " `birth` date NOT NULL," +
+                            " `cpf` varchar(15) NOT NULL," +
+                            " `genre` set ('M', 'F') NOT NULL DEFAULT 'M,F'," +
+                            " `phone_main` varchar(16) NOT NULL," +
+                            " `phone_secondary` varchar(16) NULL," +
+                            " `email` varchar(60) NOT NULL," +
+                            " `password` varchar(80) NOT NULL," +
+                            " `create_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)," +
+                            " `update_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)," +
+                            " UNIQUE INDEX `IDX_d6737b831d4e311678dfce056b` (`cpf`)," +
+                            " UNIQUE INDEX `IDX_9b1d1c80bdf7c29c7187ef8939` (`email`)," +
+                            " PRIMARY KEY (`id`)) ENGINE=InnoDB")];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        _a = DBConnection;
-                        return [4 /*yield*/, typeorm_1.createConnection("default")];
-                    case 2:
-                        _a.conn = _b.sent();
-                        return [3 /*break*/, 4];
-                    case 3:
-                        ex_1 = _b.sent();
-                        console.error(ex_1);
-                        return [3 /*break*/, 4];
-                    case 4:
-                        DBConnection.isConnected();
-                        return [2 /*return*/, DBConnection.conn];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    DBConnection.isConnected = function () {
-        var out = { msg: "", connected: false };
-        switch (DBConnection.conn) {
-            case undefined:
-                out = { msg: "Database ERROR: Connection object is undefined", connected: false };
-                break;
-            case null:
-                out = { msg: "Database ERROR: Connection object is null", connected: false };
-                break;
-            default:
-                out = { msg: "Database connection is active", connected: true };
-                break;
-        }
-        console.log(out);
-        return out;
+    createPacientes1591764264243.prototype.down = function (queryRunner) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, queryRunner.query("DROP INDEX `IDX_9b1d1c80bdf7c29c7187ef8939` ON `pacientes`")];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.query("DROP INDEX `IDX_d6737b831d4e311678dfce056b` ON `pacientes`")];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, queryRunner.query("DROP TABLE `pacientes`")];
+                    case 3:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
-    return DBConnection;
+    return createPacientes1591764264243;
 }());
-exports.default = DBConnection.getInstance();
-//# sourceMappingURL=connection.js.map
+exports.createPacientes1591764264243 = createPacientes1591764264243;
+//# sourceMappingURL=1591764264243-create-pacientes.js.map

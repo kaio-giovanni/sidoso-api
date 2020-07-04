@@ -23,23 +23,19 @@ exports.default = {
      List of headers to be allowed via Access-Control-Request-Headers header.
      The value can be one of the following.
     
-     Boolean: true - Allow current request headers
-     Boolean: false - Disallow all
      String - Comma separated list of allowed headers
      Array - An array of allowed headers
      String: * - A wildcard to allow current request headers
-     Function - Receives the current header and should return one of the above values.
     */
-    headers: true,
+    allowedHeaders: [],
     /*---- Expose Headers ----
      A list of headers to be exposed via `Access-Control-Expose-Headers`
      header. The value can be one of the following.
     
-     Boolean: false - Disallow all
      String: Comma separated list of allowed headers
      Array - An array of allowed headers
     */
-    exposeHeaders: false,
+    exposedHeaders: [],
     /* ---- Credentials ----
      Define Access-Control-Allow-Credentials header. It should always be a
      boolean.
@@ -49,5 +45,9 @@ exports.default = {
      Define Access-Control-Allow-Max-Age
     */
     maxAge: 90,
+    /* ---- optionsSuccessStatus ----
+     Define status code success
+    */
+    optionsSuccessStatus: 200
 };
 //# sourceMappingURL=cors.js.map

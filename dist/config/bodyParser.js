@@ -20,7 +20,6 @@ exports.default = {
             'application/json',
             'application/json-patch+json',
             'application/vnd.api+json',
-            'application/csp-report'
         ]
     },
     /* Raw Parser */

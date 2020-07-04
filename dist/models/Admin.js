@@ -48,21 +48,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Paciente = exports.Genre = void 0;
+exports.Admin = void 0;
 var typeorm_1 = require("typeorm");
 var bcryptjs_1 = __importDefault(require("bcryptjs"));
-var Genre;
-(function (Genre) {
-    Genre["Masculino"] = "M";
-    Genre["Feminino"] = "F";
-})(Genre = exports.Genre || (exports.Genre = {}));
-var Paciente = /** @class */ (function () {
-    function Paciente() {
+var Admin = /** @class */ (function () {
+    function Admin() {
     }
-    Paciente.prototype.hashPassword = function () {
+    Admin.prototype.hashPassword = function () {
         this.password = bcryptjs_1.default.hashSync(this.password, 8);
     };
-    Paciente.prototype.checkPassword = function (noCryptpassword) {
+    Admin.prototype.checkPassword = function (noCryptpassword) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -75,79 +70,55 @@ var Paciente = /** @class */ (function () {
     __decorate([
         typeorm_1.PrimaryGeneratedColumn(),
         __metadata("design:type", Number)
-    ], Paciente.prototype, "id", void 0);
-    __decorate([
-        typeorm_1.Column({
-            name: "is_active", type: "boolean", default: "1", nullable: false
-        }),
-        __metadata("design:type", Boolean)
-    ], Paciente.prototype, "is_active", void 0);
+    ], Admin.prototype, "id", void 0);
     __decorate([
         typeorm_1.Column({
             name: "name", type: "varchar", length: 80, nullable: false
         }),
         __metadata("design:type", String)
-    ], Paciente.prototype, "name", void 0);
+    ], Admin.prototype, "name", void 0);
     __decorate([
         typeorm_1.Column({
             name: "birth", type: "date", nullable: false
         }),
         __metadata("design:type", Date)
-    ], Paciente.prototype, "birth", void 0);
+    ], Admin.prototype, "birth", void 0);
     __decorate([
         typeorm_1.Column({
             name: "cpf", type: "varchar", length: 15, nullable: false, unique: true
         }),
         __metadata("design:type", String)
-    ], Paciente.prototype, "cpf", void 0);
-    __decorate([
-        typeorm_1.Column({
-            name: "genre", type: "set", enum: Genre, default: [Genre.Masculino, Genre.Feminino], nullable: false
-        }),
-        __metadata("design:type", String)
-    ], Paciente.prototype, "genre", void 0);
-    __decorate([
-        typeorm_1.Column({
-            name: "phone_main", type: "varchar", length: 16, nullable: false, unique: false
-        }),
-        __metadata("design:type", String)
-    ], Paciente.prototype, "phone_main", void 0);
-    __decorate([
-        typeorm_1.Column({
-            name: "phone_secondary", type: "varchar", length: 16, nullable: true, unique: false
-        }),
-        __metadata("design:type", String)
-    ], Paciente.prototype, "phone_secondary", void 0);
+    ], Admin.prototype, "cpf", void 0);
     __decorate([
         typeorm_1.Column({
             name: "email", type: "varchar", length: 60, nullable: false, unique: true
         }),
         __metadata("design:type", String)
-    ], Paciente.prototype, "email", void 0);
+    ], Admin.prototype, "email", void 0);
     __decorate([
         typeorm_1.Column({
             name: "password", type: "varchar", length: 80, nullable: false, unique: false
         }),
         __metadata("design:type", String)
-    ], Paciente.prototype, "password", void 0);
+    ], Admin.prototype, "password", void 0);
     __decorate([
         typeorm_1.CreateDateColumn(),
         __metadata("design:type", Date)
-    ], Paciente.prototype, "create_at", void 0);
+    ], Admin.prototype, "create_at", void 0);
     __decorate([
         typeorm_1.UpdateDateColumn(),
         __metadata("design:type", Date)
-    ], Paciente.prototype, "update_at", void 0);
+    ], Admin.prototype, "update_at", void 0);
     __decorate([
         typeorm_1.BeforeInsert(),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", []),
         __metadata("design:returntype", void 0)
-    ], Paciente.prototype, "hashPassword", null);
-    Paciente = __decorate([
-        typeorm_1.Entity("pacientes")
-    ], Paciente);
-    return Paciente;
+    ], Admin.prototype, "hashPassword", null);
+    Admin = __decorate([
+        typeorm_1.Entity("administrator")
+    ], Admin);
+    return Admin;
 }());
-exports.Paciente = Paciente;
-//# sourceMappingURL=Paciente.js.map
+exports.Admin = Admin;
+//# sourceMappingURL=Admin.js.map
