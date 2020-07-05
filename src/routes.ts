@@ -40,4 +40,16 @@ routes.post('/login/admin', adminController.login);
 // get all pacientes
 routes.get('/admin/:id/pacientes', [authentication], adminController.getAllPacientes);
 
+// get all profissionais
+routes.post('/admin/:id/profissionais/', [authentication], adminController.getAllProfissionais);
+
+// create a new profissional
+routes.post('/admin/:id/profissionais', [authentication], adminController.createProfissional);
+
+// get all profissões
+routes.get('/admin/:id/profissoes', [authentication], adminController.getAllProfissoes);
+
+// create a new profissao
+routes.post('/admin/:id/profissoes/new', [authentication], adminController.createProfissao);
+
 export default routes;

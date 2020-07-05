@@ -6,3 +6,6 @@ node_modules
 
 # Typeorm config
 ormconfig.json
+
+# Project anotation
+RASCUNHO.txt

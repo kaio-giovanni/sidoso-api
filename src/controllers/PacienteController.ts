@@ -13,9 +13,6 @@ class PacienteController {
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            // set authorization header
-            res.setHeader("authorization", vrfyRole.body.userToken);
-            
             const userId = req.params.id;            
             const pacienteRepository = conn.getRepository(Paciente);
             try{
