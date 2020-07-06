@@ -15,16 +15,16 @@ routes.get('/', (req, res) => {
 /* --------------------PACIENTE ROUTES-------------------- */
 
 // register a new paciente
-routes.post('/register/pacientes', pacienteController.store);
+routes.post('/register/pacientes/', pacienteController.store);
 
 // login paciente
-routes.post('/login/pacientes', pacienteController.login);
+routes.post('/login/pacientes/', pacienteController.login);
 
 // home page paciente
-routes.get('/pacientes/:id', [authentication], pacienteController.getById);
+routes.get('/pacientes/:id/', [authentication], pacienteController.getById);
 
 // edit paciente
-routes.patch('/pacientes/:id/edit', [authentication], pacienteController.update);
+routes.patch('/pacientes/:id/edit/', [authentication], pacienteController.update);
 
 /* --------------------PROFISSIONAL ROUTES-------------------- */
 
@@ -32,24 +32,24 @@ routes.patch('/pacientes/:id/edit', [authentication], pacienteController.update)
 /* --------------------ADMIN ROUTES-------------------- */
 
 // register a new admin (Need pre-authentication )
-routes.post('/admin/:id/register', [authentication], adminController.store);
+routes.post('/admin/:id/register/', [authentication], adminController.store);
 
 // login admin
-routes.post('/login/admin', adminController.login);
+routes.post('/login/admin/', adminController.login);
 
 // get all pacientes
-routes.get('/admin/:id/pacientes', [authentication], adminController.getAllPacientes);
+routes.get('/admin/:id/pacientes/', [authentication], adminController.getAllPacientes);
 
 // get all profissionais
-routes.post('/admin/:id/profissionais/', [authentication], adminController.getAllProfissionais);
+routes.get('/admin/:id/profissionais/', [authentication], adminController.getAllProfissionais);
 
 // create a new profissional
-routes.post('/admin/:id/profissionais', [authentication], adminController.createProfissional);
+routes.post('/admin/:id/profissionais/register/', [authentication], adminController.createProfissional);
 
 // get all profissões
-routes.get('/admin/:id/profissoes', [authentication], adminController.getAllProfissoes);
+routes.get('/admin/:id/profissoes/', [authentication], adminController.getAllProfissoes);
 
 // create a new profissao
-routes.post('/admin/:id/profissoes/new', [authentication], adminController.createProfissao);
+routes.post('/admin/:id/profissoes/new/', [authentication], adminController.createProfissao);
 
 export default routes;

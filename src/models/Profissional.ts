@@ -58,7 +58,7 @@ export class Profissional {
 
     /* Profissao */
     @ManyToOne(type => Profissao, profissao => profissao.id , { nullable: false })
-    profissao?: Profissao;
+    profissao!: Profissao;
 
     /* email */
     @Column({

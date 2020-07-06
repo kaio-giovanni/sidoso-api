@@ -151,7 +151,10 @@ class AdminController {
 
             const profissionalRepository = conn.getRepository(Profissional);
             try{
-                const profissionais = await profissionalRepository.find({ where: { is_active: 1 } });
+                const profissionais = await profissionalRepository.find({
+                    where: { is_active: 1 },
+                    relations: ["profissao"]
+                });
                 return res.status(200).send(profissionais); 
             }catch(error){
                 return res.status(401).send({
