@@ -21,12 +21,6 @@ export class Consulta {
     })
     title!: string;
 
-    /* photo consulta url */
-    @Column({
-        name: "photo_url", type: "varchar", length: 100, nullable: true
-    })
-    photo_url?: string;
-
     /* profissional */
     @ManyToOne(type => Profissional, profissional => profissional.id, { nullable: false, cascade: true })
     profissional!: Profissional;

@@ -76,7 +76,7 @@ export class Paciente {
     update_at!: Date;
 
     @BeforeInsert()
-    hashPassword(){
+    private hashPassword(){
         this.password = bcrypt.hashSync(this.password, 8);
     }
 

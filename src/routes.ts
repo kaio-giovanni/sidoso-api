@@ -2,54 +2,54 @@ import { Router } from 'express';
 import authentication from './middlewares/auth';
 import AdminController from './controllers/AdminController';
 import PacienteController from './controllers/PacienteController';
+import ProfissionalController from './controllers/ProfissionalController';
 
 const routes = Router();
 const adminController = new AdminController();
 const pacienteController = new PacienteController();
+const profissionalController = new ProfissionalController();
 
-// home page (Does not need authentication)
 routes.get('/', (req, res) => {
     return res.status(200).send({ page: "home page sidoso"});
 });
 
 /* --------------------PACIENTE ROUTES-------------------- */
 
-// register a new paciente
-routes.post('/register/pacientes/', pacienteController.store);
+routes.post('/register/paciente/', pacienteController.store);
 
-// login paciente
-routes.post('/login/pacientes/', pacienteController.login);
+routes.post('/login/paciente/', pacienteController.login);
 
-// home page paciente
-routes.get('/pacientes/:id/', [authentication], pacienteController.getById);
+routes.get('/paciente/:id/', [authentication], pacienteController.getById);
 
-// edit paciente
-routes.patch('/pacientes/:id/edit/', [authentication], pacienteController.update);
+routes.patch('/paciente/:id/edit/', [authentication], pacienteController.update);
 
 /* --------------------PROFISSIONAL ROUTES-------------------- */
 
+routes.post('/login/profissional/', profissionalController.login);
+
+routes.get('/profissional/:id/', [authentication], profissionalController.getProfissionalById);
+
+routes.post('/profissional/:id/especialidade/new/', [authentication], profissionalController.addProfEspecialidade);
 
 /* --------------------ADMIN ROUTES-------------------- */
 
 // register a new admin (Need pre-authentication )
-routes.post('/admin/:id/register/', [authentication], adminController.store);
+routes.post('/admin/:id/register/administrador/', [authentication], adminController.store);
 
-// login admin
 routes.post('/login/admin/', adminController.login);
 
-// get all pacientes
-routes.get('/admin/:id/pacientes/', [authentication], adminController.getAllPacientes);
+routes.get('/admin/:id/paciente/', [authentication], adminController.getAllPacientes);
 
-// get all profissionais
-routes.get('/admin/:id/profissionais/', [authentication], adminController.getAllProfissionais);
+routes.get('/admin/:id/profissional/', [authentication], adminController.getAllProfissionais);
 
-// create a new profissional
-routes.post('/admin/:id/profissionais/register/', [authentication], adminController.createProfissional);
+routes.post('/admin/:id/register/profissional', [authentication], adminController.createProfissional);
 
-// get all profissões
-routes.get('/admin/:id/profissoes/', [authentication], adminController.getAllProfissoes);
+routes.get('/admin/:id/profissao/', [authentication], adminController.getAllProfissoes);
 
-// create a new profissao
-routes.post('/admin/:id/profissoes/new/', [authentication], adminController.createProfissao);
+routes.post('/admin/:id/register/profissao/', [authentication], adminController.createProfissao);
+
+routes.post('/admin/:id/register/especialidade/', [authentication], adminController.createEspecialidade);
+
+routes.get('/admin/:id/especialidade/', [authentication], adminController.getAllEspecialidades);
 
 export default routes;

@@ -6,7 +6,7 @@ import connection from '../database/connection';
 class PacienteController {
 
     // get paciente by id
-    public getById(req: Request, res: Response){
+    public async getById(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
 
@@ -30,7 +30,7 @@ class PacienteController {
     }
 
     // login paciente
-    public login(req: Request, res: Response){
+    public async login(req: Request, res: Response){
         connection.then(async conn => {
             const { email, password } = req.body;
 
@@ -74,7 +74,7 @@ class PacienteController {
     }
 
     // create a new paciente
-    public store(req: Request, res: Response){
+    public async store(req: Request, res: Response){
         connection.then(async conn => {
             const data = req.body;
 
@@ -104,16 +104,13 @@ class PacienteController {
     }
 
     // update a paciente
-    public update(req: Request, res: Response){
+    public async update(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
 
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            // set authorization header
-            res.setHeader("authorization", vrfyRole.body.userToken);
-            
             const userId = req.params.id;
             const {
                 phone_main,
@@ -136,7 +133,7 @@ class PacienteController {
     }
 
     // set paciente.is_active to false
-    public destroy(req: Request, res: Response){
+    public async destroy(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
 

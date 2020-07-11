@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, UpdateDateColumn, CreateDateColumn, ManyToOne } from 'typeorm';
-import bcrypt from 'bcryptjs';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, UpdateDateColumn, CreateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Profissao } from './Profissao';
+import { ProfEspec } from './ProfEspec';
+import bcrypt from 'bcryptjs';
 
 export enum Genre { // Genre: Masculino | Feminino
     Masculino = "M",
@@ -60,6 +61,10 @@ export class Profissional {
     @ManyToOne(type => Profissao, profissao => profissao.id , { nullable: false })
     profissao!: Profissao;
 
+    /* especialidade */
+    @OneToMany(type => ProfEspec, profespec => profespec.profissional, { nullable: true })
+    profespec?: ProfEspec[];
+
     /* email */
     @Column({
         name: "email", type: "varchar", length: 60, nullable: false, unique: true
@@ -81,7 +86,7 @@ export class Profissional {
     update_at!: Date;
 
     @BeforeInsert()
-    hashPassword(){
+    private hashPassword(){
         this.password = bcrypt.hashSync(this.password, 8);
     }
 

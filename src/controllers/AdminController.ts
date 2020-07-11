@@ -3,13 +3,14 @@ import { Admin } from '../models/Admin';
 import { Paciente } from '../models/Paciente';
 import { Profissional } from '../models/Profissional';
 import { Profissao } from '../models/Profissao';
+import { Especialidade } from '../models/Especialidade';
 import { TokenJwt } from '../authentication/TokenJwt';
 import connection from '../database/connection';
 
 class AdminController {
 
     // login admin
-    public login(req: Request, res: Response){
+    public async login(req: Request, res: Response){
         connection.then(async conn => {
             const { email, password } = req.body;
 
@@ -53,7 +54,7 @@ class AdminController {
     }
 
     // create a new admin
-    public store(req: Request, res: Response){
+    public async store(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
@@ -84,8 +85,8 @@ class AdminController {
         });
     }
 
-    // ----------------- PACIENTES ----------------- //
-    public getAllPacientes(req: Request, res: Response){
+    // get all pacientes
+    public async getAllPacientes(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
@@ -107,8 +108,8 @@ class AdminController {
         });
     }
 
-    // ----------------- PROFISSIONAIS ----------------- //    
-    public createProfissional(req: Request, res: Response){
+    // create a new profissional
+    public async createProfissional(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
@@ -142,7 +143,8 @@ class AdminController {
         });
     }
 
-    public getAllProfissionais(req: Request, res: Response){
+    // get all profissionais
+    public async getAllProfissionais(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
@@ -150,12 +152,14 @@ class AdminController {
                 return res.status(403).send(vrfyRole.body);
 
             const profissionalRepository = conn.getRepository(Profissional);
+         
             try{
-                const profissionais = await profissionalRepository.find({
-                    where: { is_active: 1 },
-                    relations: ["profissao"]
-                });
-                return res.status(200).send(profissionais); 
+                const profissionais = await profissionalRepository.createQueryBuilder("profissional")
+                    .leftJoinAndSelect("profissional.profissao", "profissao")
+                    .leftJoinAndSelect("profissional.profespec", "profespec")
+                    .leftJoinAndSelect("profespec.especialidade", "especialidade")
+                    .getMany();
+                return res.status(200).send(profissionais);
             }catch(error){
                 return res.status(401).send({
                     error: "User not found",
@@ -167,23 +171,21 @@ class AdminController {
         });
     }
 
-    // ----------------- PROFISSOES ----------------- //    
-    public createProfissao(req: Request, res: Response){
+    // create a new profissao
+    public async createProfissao(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
         
-            const { profissao_name } = req.body;
-        
             const profissaoRepository = conn.getRepository(Profissao);
             const profissao = profissaoRepository.create();
             
             try{
-                profissao.name = profissao_name;
+                profissao.name = req.body.profissao_name;
                 await profissaoRepository.save(profissao);
-
+                
                 return res.status(201).send({ success: true});
             }catch(error){
                 return res.status(400).send({ error: "Registration failure", message: error });
@@ -194,7 +196,8 @@ class AdminController {
         });
     }
 
-    public getAllProfissoes(req: Request, res: Response){
+    // get all profissoes
+    public async getAllProfissoes(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
@@ -208,6 +211,56 @@ class AdminController {
             }catch(error){
                 return res.status(401).send({
                     error: "Profissao not found",
+                    message: error
+                });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    // create especialidade
+    public async createEspecialidade(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const especialidadeRepository = conn.getRepository(Especialidade);
+            const especialidade = especialidadeRepository.create();
+            try{
+                especialidade.name = req.body.esp_name;
+                especialidade.description = req.body.esp_desc;
+                especialidade.profissao = req.body.esp_prof;
+                await especialidadeRepository.save(especialidade);
+                
+                return res.status(201).send({ success: true});
+            }catch(error){
+                return res.status(400).send({ error: "Registration failure", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    //get all especialidades
+    public async getAllEspecialidades(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const especialidadeRepository = conn.getRepository(Especialidade);
+            try{
+                const especialidades = await especialidadeRepository.find({
+                    relations: ["profissao"]
+                });
+                return res.status(200).send(especialidades); 
+            }catch(error){
+                return res.status(401).send({
+                    error: "Especialidade not found",
                     message: error
                 });
             }

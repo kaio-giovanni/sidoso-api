@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc -diagnostics",
-    "dev:server": "ts-node-dev --respawn --transpileOnly --ignore-watch node_modules src/server.ts",
+    "dev:server": "ts-node-dev --respawn --transpileOnly --no-notify --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js ",
     "create-migration": "ts-node-dev ./node_modules/typeorm/cli.js migration:generate -n",
     "start": "node ./dist/server.js"
