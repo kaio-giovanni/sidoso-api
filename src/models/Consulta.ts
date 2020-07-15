@@ -3,9 +3,9 @@ import { Profissional } from './Profissional';
 import { Paciente } from './Paciente';
 
 export enum CONSULTA_STATUS {
-    MARCADA = "MARCADA",
-    CONCLUIDA = "CONCLUÍDA",
-    CANCELADA = "CANCELADA"
+    MARCADA = "001",
+    CONCLUIDA = "002",
+    CANCELADA = "003"
 }
 
 @Entity("consultas")
@@ -48,7 +48,8 @@ export class Consulta {
 
     /* consulta status */
     @Column({
-        name: "status", type: "set", enum: CONSULTA_STATUS, default: [CONSULTA_STATUS.CANCELADA, CONSULTA_STATUS.CONCLUIDA, CONSULTA_STATUS.MARCADA], nullable: false
+        name: "status", type: "set", enum: CONSULTA_STATUS, 
+        default: CONSULTA_STATUS.MARCADA, nullable: false
     })
     status!: CONSULTA_STATUS;
 

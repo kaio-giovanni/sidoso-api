@@ -18,21 +18,21 @@ class DBConnection {
         return DBConnection.conn;
     }
 
-    private static isConnected(): any {
-        let out = { msg: "", connected: false };
-        switch(DBConnection.conn){
-            case undefined:
-                out = { msg: "Database ERROR: Connection object is undefined", connected: false };
-                break;
-            case null:
-                out = { msg: "Database ERROR: Connection object is null", connected: false };
-                break;
-            default:
-                out = { msg: "Database connection is active", connected: true };
-                break;
+    private static isConnected(): boolean {
+        if(DBConnection.conn.isConnected){
+            console.log({
+                "message": "Database connection is active",
+                "isConnected": true 
+            });
+
+            return true;
         }
-        console.log(out);
-        return out;
+        console.error({
+            "error": "Database connection failure",
+            "isConnected": false
+        });
+
+        return false;
     }
 }
 

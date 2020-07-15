@@ -10,7 +10,7 @@ export class createProfissionais1594314946348 implements MigrationInterface {
         " `name` varchar(80) NOT NULL,"+
         " `birth` date NOT NULL,"+
         " `cpf` varchar(15) NOT NULL,"+
-        " `genre` set ('M', 'F') NOT NULL DEFAULT 'M,F',"+
+        " `genre` set ('M', 'F') NOT NULL DEFAULT 'M',"+
         " `phone_main` varchar(16) NOT NULL,"+
         " `phone_secondary` varchar(16) NULL,"+
         " `email` varchar(60) NOT NULL,"+

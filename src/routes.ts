@@ -23,6 +23,8 @@ routes.get('/paciente/:id/', [authentication], pacienteController.getById);
 
 routes.patch('/paciente/:id/edit/', [authentication], pacienteController.update);
 
+routes.get('/paciente/:id/consulta/', [authentication], pacienteController.getConsultas);
+
 /* --------------------PROFISSIONAL ROUTES-------------------- */
 
 routes.post('/login/profissional/', profissionalController.login);
@@ -30,6 +32,10 @@ routes.post('/login/profissional/', profissionalController.login);
 routes.get('/profissional/:id/', [authentication], profissionalController.getProfissionalById);
 
 routes.post('/profissional/:id/especialidade/new/', [authentication], profissionalController.addProfEspecialidade);
+
+routes.post('/profissional/:id/consulta/new/', [authentication], profissionalController.createConsulta);
+
+routes.get('/profissional/:id/consulta/', [authentication], profissionalController.getConsultas);
 
 /* --------------------ADMIN ROUTES-------------------- */
 
@@ -42,7 +48,7 @@ routes.get('/admin/:id/paciente/', [authentication], adminController.getAllPacie
 
 routes.get('/admin/:id/profissional/', [authentication], adminController.getAllProfissionais);
 
-routes.post('/admin/:id/register/profissional', [authentication], adminController.createProfissional);
+routes.post('/admin/:id/register/profissional/', [authentication], adminController.createProfissional);
 
 routes.get('/admin/:id/profissao/', [authentication], adminController.getAllProfissoes);
 
@@ -51,5 +57,9 @@ routes.post('/admin/:id/register/profissao/', [authentication], adminController.
 routes.post('/admin/:id/register/especialidade/', [authentication], adminController.createEspecialidade);
 
 routes.get('/admin/:id/especialidade/', [authentication], adminController.getAllEspecialidades);
+
+routes.post('admin/:id/register/associado/', [authentication], adminController.registerAssociado);
+
+routes.get('/admin/:id/associado/', [authentication], adminController.getAllAssociados);
 
 export default routes;

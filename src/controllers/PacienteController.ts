@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Paciente } from '../models/Paciente';
+import { Consulta } from '../models/Consulta';
 import { TokenJwt } from '../authentication/TokenJwt';
 import connection from '../database/connection';
 
@@ -155,6 +156,36 @@ class PacienteController {
 
         }).catch(error => {
             return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    // get consultas
+    public async getConsultas(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+            
+            const userId = req.params.id;
+            const consultaRepository = conn.getRepository(Consulta);
+            try{
+                const consultas = await consultaRepository.find({
+                    where: {
+                        paciente: userId
+                    },
+                    relations: [
+                        "profissional",
+                        "paciente"
+                    ]
+                });
+
+                return res.status(200).send(consultas);
+            }catch(error){
+                return res.status(401).send({ error: "Error in get consulta", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occured", message: error });
         });
     }
 }

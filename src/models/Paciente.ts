@@ -39,7 +39,8 @@ export class Paciente {
 
     /* genre (sex) */
     @Column({
-        name: "genre", type: "set", enum: Genre, default: [Genre.Masculino, Genre.Feminino], nullable: false
+        name: "genre", type: "set", enum: Genre, 
+        default: Genre.Masculino, nullable: false
     })
     genre!: Genre;
 

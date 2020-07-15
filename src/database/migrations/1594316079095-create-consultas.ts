@@ -10,7 +10,7 @@ export class createConsultas1594316079095 implements MigrationInterface {
         " `date_c` datetime NOT NULL,"+
         " `latitude` varchar(255) NOT NULL,"+
         " `longitude` varchar(255) NOT NULL,"+
-        " `status` set ('MARCADA', 'CONCLUÍDA', 'CANCELADA') NOT NULL DEFAULT 'CANCELADA,CONCLUÍDA,MARCADA',"+
+        " `status` set ('001', '002', '003') NOT NULL DEFAULT '001',"+
         " `obs` text NULL,"+
         " `create_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),"+
         " `update_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),"+

@@ -5,6 +5,7 @@ import { Profissional } from '../models/Profissional';
 import { Profissao } from '../models/Profissao';
 import { Especialidade } from '../models/Especialidade';
 import { TokenJwt } from '../authentication/TokenJwt';
+import { Associado } from '../models/Associado';
 import connection from '../database/connection';
 
 class AdminController {
@@ -261,6 +262,61 @@ class AdminController {
             }catch(error){
                 return res.status(401).send({
                     error: "Especialidade not found",
+                    message: error
+                });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    // register associado
+    public async registerAssociado(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const associadoRepository = conn.getRepository(Associado);
+            const associado = associadoRepository.create();
+            try{
+                associado.name = req.body.name;
+                associado.cnpj = req.body.cnpj;
+                associado.phone_main = req.body.phone_main;
+                associado.phone_secondary = req.body.phone_secondary;
+                associado.email = req.body.email;
+                associado.latitude = req.body.latitude;
+                associado.longitude = req.body.longitude;
+                associado.logo = req.body.logo;
+
+                await associadoRepository.save(associado);
+                
+                return res.status(201).send({ success: true});
+            }catch(error){
+                return res.status(400).send({ error: "Registration failure", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error as occured", message: error });
+        });
+    }
+
+    // get all associados
+    public async getAllAssociados(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const associadoRepository = conn.getRepository(Associado);
+            try{
+                const associados = await associadoRepository.find({  });
+                
+                return res.status(200).send(associados); 
+            }catch(error){
+                return res.status(401).send({
+                    error: "Associado not found",
                     message: error
                 });
             }

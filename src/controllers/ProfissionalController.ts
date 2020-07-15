@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Profissional } from '../models/Profissional';
+import { Consulta } from '../models/Consulta';
 import { ProfEspec } from '../models/ProfEspec';
 import { TokenJwt } from '../authentication/TokenJwt';
 import connection from '../database/connection';
@@ -100,6 +101,68 @@ class ProfissionalController {
 
         }).catch(error => {
             return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    // create consulta
+    public async createConsulta(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PROFISSIONAL);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const consultaRepository = conn.getRepository(Consulta);
+            const consulta = consultaRepository.create();
+            const userId: any = req.params.id;
+            try{
+                consulta.title = req.body.title;
+                consulta.profissional = userId;
+                consulta.paciente = req.body.pacienteId;
+                consulta.date = req.body.date;
+                consulta.latitude = req.body.latitude;
+                consulta.longitude = req.body.longitude;
+                consulta.status = req.body.status;
+                consulta.obs = req.body.obs;
+
+                await consultaRepository.save(consulta);
+
+                return res.status(200).send({ success: true });
+            }catch(error){
+                return res.status(400).send({ error: "Register failed", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error as occured", message: error })
+        });
+    }
+
+    // get consultas
+    public async getConsultas(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PROFISSIONAL);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+            
+            const userId = req.params.id;
+            const consultaRepository = conn.getRepository(Consulta);
+            try{
+                const consultas = await consultaRepository.find({
+                    where: {
+                        profissional: userId
+                    },
+                    relations: [
+                        "profissional",
+                        "paciente"
+                    ]
+                });
+
+                return res.status(200).send(consultas);
+            }catch(error){
+                return res.status(401).send({ error: "Error in get consulta", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occured", message: error });
         });
     }
 }

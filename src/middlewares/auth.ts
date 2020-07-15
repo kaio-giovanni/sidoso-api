@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { TokenJwt } from '../authentication/TokenJwt';
 
 /** 
- * Check token 
+ * Check token authentication
  */
 const authentication = async (req: Request, res: Response, next: NextFunction) => {
 
