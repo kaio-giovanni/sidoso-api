@@ -19,20 +19,25 @@ class DBConnection {
     }
 
     private static isConnected(): boolean {
-        if(DBConnection.conn.isConnected){
-            console.log({
-                "message": "Database connection is active",
-                "isConnected": true 
-            });
-
-            return true;
+        switch(DBConnection.conn){
+            case undefined:
+                console.error({
+                    "error":"Database connection failure",
+                    "message":"Database connection object is undefined"
+                });
+                return false;
+            case null:
+                console.error({
+                    "error": "Database connection failure",
+                    "message": "Database connection object is null"
+                });
+                return false;
+            default:
+                console.log({
+                    "connection": "Database connection is active"
+                });
+                return true;
         }
-        console.error({
-            "error": "Database connection failure",
-            "isConnected": false
-        });
-
-        return false;
     }
 }
 

@@ -6,6 +6,7 @@ import { Profissao } from '../models/Profissao';
 import { Especialidade } from '../models/Especialidade';
 import { TokenJwt } from '../authentication/TokenJwt';
 import { Associado } from '../models/Associado';
+import { PagConsulta } from '../models/PagConsulta';
 import connection from '../database/connection';
 
 class AdminController {
@@ -319,6 +320,34 @@ class AdminController {
                     error: "Associado not found",
                     message: error
                 });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    // pagamento consulta
+    public async payConsulta(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const payConsultaRepository = conn.getRepository(PagConsulta);
+            const payConsulta = payConsultaRepository.create();
+            try{
+                payConsulta.consulta = req.body.consultaId;
+                payConsulta.price = req.body.price;
+                payConsulta.pay_value = req.body.pay_value;
+                payConsulta.discount = req.body.discount;
+                payConsulta.status = req.body.status;
+
+                await payConsultaRepository.save(payConsulta);
+
+                return res.status(200).send({ success: true});
+            }catch(error){
+                return res.status(400).send({ error: "Error making payment", message: error });
             }
         }).catch((error) => {
             return res.status(406).send({ error: "An error has occurred", message: error });

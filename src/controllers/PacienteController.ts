@@ -17,7 +17,14 @@ class PacienteController {
             const userId = req.params.id;            
             const pacienteRepository = conn.getRepository(Paciente);
             try{
-                const paciente = await pacienteRepository.findOneOrFail({ where: { id: userId } });
+                const paciente = await pacienteRepository.findOneOrFail({
+                    select: [
+                        "id", "is_active", "name", "birth", "cpf", "genre", "phone_main", "phone_secondary", "email"
+                    ],
+                    where: {
+                        id: userId
+                    }
+                });
                 return res.status(200).send(paciente); 
             }catch(error){
                 return res.status(401).send({
@@ -170,16 +177,21 @@ class PacienteController {
             const userId = req.params.id;
             const consultaRepository = conn.getRepository(Consulta);
             try{
-                const consultas = await consultaRepository.find({
-                    where: {
-                        paciente: userId
-                    },
-                    relations: [
-                        "profissional",
-                        "paciente"
-                    ]
-                });
-
+                const consultas = await consultaRepository.createQueryBuilder("consulta")
+                    .leftJoinAndSelect("consulta.profissional", "profissional")
+                    .leftJoinAndSelect("consulta.paciente", "paciente")
+                    .select([
+                        "consulta.id", "consulta.title", "consulta.date", "consulta.latitude", "consulta.longitude", "consulta.status",
+                        "consulta.obs", "consulta.create_at", "consulta.update_at",
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
+                        "profissional.cpf", "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.email",
+                        "paciente.id", "paciente.is_active", "paciente.name", "paciente.birth", "paciente.cpf", "paciente.genre", "paciente.phone_main",
+                        "paciente.phone_secondary", "paciente.email"
+                    ])
+                    .where("consulta.paciente = :userId", { userId })
+                    .getMany();
+                    
                 return res.status(200).send(consultas);
             }catch(error){
                 return res.status(401).send({ error: "Error in get consulta", message: error });

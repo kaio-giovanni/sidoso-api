@@ -2,8 +2,10 @@ import { Request, Response } from 'express';
 import { Profissional } from '../models/Profissional';
 import { Consulta } from '../models/Consulta';
 import { ProfEspec } from '../models/ProfEspec';
+import { PagConsulta } from '../models/PagConsulta';
 import { TokenJwt } from '../authentication/TokenJwt';
 import connection from '../database/connection';
+
 
 class ProfissionalController {    
 
@@ -60,12 +62,18 @@ class ProfissionalController {
                 return res.status(403).send(vrfyRole.body);
 
             const profissionalRepository = conn.getRepository(Profissional);
-         
+            const userId = req.params.id;
             try{
                 const profissional = await profissionalRepository.createQueryBuilder("profissional")
                     .leftJoinAndSelect("profissional.profissao", "profissao")
                     .leftJoinAndSelect("profissional.profespec", "profespec")
                     .leftJoinAndSelect("profespec.especialidade", "especialidade")
+                    .select([
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
+                        "profissional.cpf", "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.email", "profissao.name", "profespec.id", "especialidade.name", "especialidade.description"
+                    ])
+                    .where("profissional.id = :userId", { userId })
                     .getOne();
                 return res.status(200).send(profissional);
             }catch(error){
@@ -147,15 +155,20 @@ class ProfissionalController {
             const userId = req.params.id;
             const consultaRepository = conn.getRepository(Consulta);
             try{
-                const consultas = await consultaRepository.find({
-                    where: {
-                        profissional: userId
-                    },
-                    relations: [
-                        "profissional",
-                        "paciente"
-                    ]
-                });
+                const consultas = await consultaRepository.createQueryBuilder("consulta")
+                    .leftJoinAndSelect("consulta.profissional", "profissional")
+                    .leftJoinAndSelect("consulta.paciente", "paciente")
+                    .select([
+                        "consulta.id", "consulta.title", "consulta.date", "consulta.latitude", "consulta.longitude", "consulta.status",
+                        "consulta.obs", "consulta.create_at", "consulta.update_at",
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
+                        "profissional.cpf", "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.email",
+                        "paciente.id", "paciente.is_active", "paciente.name", "paciente.birth", "paciente.cpf", "paciente.genre", "paciente.phone_main",
+                        "paciente.phone_secondary", "paciente.email"
+                    ])
+                    .where("consulta.profissional = :userId", { userId })
+                    .getMany();
 
                 return res.status(200).send(consultas);
             }catch(error){
@@ -163,6 +176,44 @@ class ProfissionalController {
             }
         }).catch((error) => {
             return res.status(406).send({ error: "An error has occured", message: error });
+        });
+    }
+
+    // get financial
+    public async getFinancial(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PROFISSIONAL);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const userId = req.params.id;
+            const payConsultaRepository = conn.getRepository(PagConsulta);
+            try{
+                const payConsulta = await payConsultaRepository.createQueryBuilder("pagconsulta")
+                    .leftJoinAndSelect("pagconsulta.consulta", "consulta")
+                    .leftJoinAndSelect("consulta.profissional","profissional")
+                    .leftJoinAndSelect("consulta.paciente","paciente")
+                    .select([
+                        "pagconsulta.id", "pagconsulta.price", "pagconsulta.pay_value", "pagconsulta.discount", "pagconsulta.status",
+                        "pagconsulta.create_at", "pagconsulta.update_at",
+                        "consulta.id", "consulta.title", "consulta.date", "consulta.latitude", "consulta.longitude", "consulta.status",
+                        "consulta.obs", "consulta.create_at", "consulta.update_at",
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
+                        "profissional.cpf", "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.email",
+                        "paciente.id", "paciente.is_active", "paciente.name", "paciente.birth", "paciente.cpf", "paciente.genre", "paciente.phone_main",
+                        "paciente.phone_secondary", "paciente.email"
+                    ])
+                    .where("consulta.profissional = :userId", { userId })
+                    .getMany();
+
+                return res.status(200).send(payConsulta);
+            }catch(error){
+                return res.status(401).send({ error: "Error in get consultation payment", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error })
         });
     }
 }
