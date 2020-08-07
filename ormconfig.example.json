@@ -16,12 +16,4 @@
     "migrationsDir": "src/database/migrations"
   },
   "synchronize": false
-},{
-  "name": "chat",
-  "type": "mongodb",
-  "host": "localhost",
-  "port": 1234,
-  "username": "",
-  "password": "",
-  "database": ""
 }]

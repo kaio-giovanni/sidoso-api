@@ -1,6 +1,9 @@
 # Node modules folder
 node_modules
  
+# dist
+dist
+
 # Environment variables 
 .env
 
