@@ -10,7 +10,7 @@
     "dev:server": "ts-node-dev --respawn --transpileOnly --no-notify --ignore-watch node_modules src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js ",
     "create-migration": "ts-node-dev ./node_modules/typeorm/cli.js migration:generate -n",
-    "start": "node ./dist/server.js"
+    "start": "node dist/server.js"
   },
   "author": {
     "name": "Kaio giovanni",
@@ -28,7 +28,6 @@
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.6",
     "@types/jsonwebtoken": "^8.5.0",
-    "@types/mongoose": "^5.7.32",
     "@types/socket.io": "^2.1.10",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.9.5"

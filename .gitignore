@@ -9,6 +9,3 @@ dist
 
 # Typeorm config
 ormconfig.json
-
-# Project anotation
-RASCUNHO.txt

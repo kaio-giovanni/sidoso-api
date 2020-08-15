@@ -1,6 +1,7 @@
 import app from './app';
 import dotenv from 'dotenv';
 import socket from 'socket.io';
+import Chat, { IUser, IMessage } from './chat/Main';
 
 // Loads .env file into process.env
 dotenv.config();
@@ -19,30 +20,41 @@ const server = app.listen(app_port, () => {
 
 const io = socket(server);
 
-let usersOnline: any[] = [];
-
 io.on("connection", (client) => {
   console.log(`User ${client.id} connected`);
 
+  // when the user enters the application
   client.on("join", (data) => {
-    usersOnline.push({
-      "socketid": client.id!,
-      "sysId": data.id!,
-      "email": data.email!,
-      "name": data.name!
-    });
+
+    let user: IUser = {
+      socketid: client.id,
+      sysId: data.sysId,
+      email: data.email,
+      name: data.name
+    }
+    Chat.addUser(user);
+    
     client.emit("joined", "You have connected to the server");
-    client.broadcast.emit("joined", data.name + "Has joined to the server");
+    client.broadcast.emit("joined", user.name + "Has joined to the server");
+
+    // Return all users online
+    io.emit("usersOnline", Chat.getUsers());
   });
 
-  // Add socketid na sala
+  // Add socketid in the room
   client.on("new room", (args) => {
     client.join(args.room_name);
 
-    let index = usersOnline.findIndex(obj => obj.socketid === client.id);
-    console.log("user "+ usersOnline[index].name + " has joined in to"+ args.room_name);
-  });
+    let index = Chat.findIndexBySocketId(client.id);
 
+    if (index === null){
+      // not found
+    }else{
+      io.in(args.room_name).emit("login room", Chat.findByIndex(index));
+    }
+  });
+  
+/*
   client.on("send message to", (args) => {
     client.broadcast.to(args.room_name).emit("receive private message", {
       "id": client.id,
@@ -53,13 +65,31 @@ io.on("connection", (client) => {
       "sender_at": args.date
     });
   });
+*/
+
+  client.on("send private message", (data: IMessage) => {
+    let userReceptor: IUser = Chat.findByEmail(data.rec_email);
+
+    if(userReceptor === null){
+      // not found
+    }else{
+      client.broadcast.to(userReceptor.socketid).emit("receive private message", data) 
+    }
+  })
 
   client.on("disconnect", () => {
-    let index = usersOnline.findIndex(obj => obj.socketid === client.id);
-    
-    io.emit("disconnected", usersOnline[index]);
+    let index = Chat.findIndexBySocketId(client.id);
 
-    delete usersOnline[index];
+    if (index === null){
+      // not found
+    }else{
+      io.emit("disconnected", Chat.findByIndex(index));
+
+      Chat.delUser(index);
+
+      // Return all users online
+      io.emit("usersOnline", Chat.getUsers());
+    }
   });
 
 });
