@@ -6,6 +6,3 @@ dist
 
 # Environment variables 
 .env
-
-# Typeorm config
-ormconfig.json
