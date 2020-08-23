@@ -23,7 +23,7 @@ class App {
 
     // global middlewares
     private middlewares():void {
-        this.express.use(express.static(path.join(__dirname, '..', 'public')));
+        this.express.use('/public/images/', express.static(path.join(__dirname, '..', 'public', 'images')));
         this.express.use(cors(corsConfig));
         this.express.use(bodyParser.json(parserConfig.json));
         this.express.use(bodyParser.urlencoded(parserConfig.urlencoded));

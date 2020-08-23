@@ -124,6 +124,7 @@ class AdminController {
             const profissional = profissionalRepository.create();
             
             try{
+                profissional.photo = req.file.filename;
                 profissional.name = data.name;
                 profissional.birth = data.birth;
                 profissional.cpf = data.cpf;
@@ -289,7 +290,7 @@ class AdminController {
                 associado.email = req.body.email;
                 associado.latitude = req.body.latitude;
                 associado.longitude = req.body.longitude;
-                associado.logo = req.body.logo;
+                associado.logo = req.file.filename;
 
                 await associadoRepository.save(associado);
                 

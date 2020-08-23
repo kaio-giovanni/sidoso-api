@@ -19,7 +19,7 @@ class PacienteController {
             try{
                 const paciente = await pacienteRepository.findOneOrFail({
                     select: [
-                        "id", "is_active", "name", "birth", "cpf", "genre", "phone_main", "phone_secondary", "email"
+                        "id", "is_active", "photo", "name", "birth", "cpf", "genre", "phone_main", "phone_secondary", "email"
                     ],
                     where: {
                         id: userId
@@ -90,6 +90,7 @@ class PacienteController {
             const paciente = pacienteRepository.create();
             
             try{
+                paciente.photo = req.file.filename;
                 paciente.name = data.name;
                 paciente.birth = data.birth;
                 paciente.cpf = data.cpf;
@@ -123,11 +124,12 @@ class PacienteController {
             const {
                 phone_main,
                 phone_secondary } = req.body;
+            const photo = req.file.filename;
 
             const pacienteRepository = conn.getRepository(Paciente);
             try{
                 await pacienteRepository.update(userId, {
-                    phone_main, phone_secondary
+                    photo, phone_main, phone_secondary
                 });
 
                 return res.status(200).send({ success: true });

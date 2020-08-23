@@ -19,6 +19,12 @@ export class Paciente {
     })
     is_active!: boolean;
 
+    /* Photo */
+    @Column({
+        name: "photo", type: "varchar", length: 80, nullable: true
+    })
+    photo?: string;
+
     /* paciente name */
     @Column({
         name: "name", type: "varchar", length: 80, nullable: false

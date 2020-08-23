@@ -21,6 +21,12 @@ export class Profissional {
     })
     is_active!: boolean;
 
+    /* Photo */
+    @Column({
+        name: "photo", type: "varchar", length: 80, nullable: true
+    })
+    photo?: string;
+
     /* profissional name */
     @Column({
         name: "name", type: "varchar", length: 80, nullable: false
