@@ -19,17 +19,17 @@ export default class Chat {
     static usersOnline: any[] = [];
 
     static getUsers(){
-        console.log(this.usersOnline);
         return this.usersOnline;
     }
 
     static addUser(user: IUser){
-        console.log(user);
+        console.log("New user joined: " + user.name + " | " + user.email + " | " + user.socketid);
         this.usersOnline.push(user);
     }
 
     static delUser(index: number){
-        delete this.usersOnline[index];
+        const removedUser = this.usersOnline.splice(index, 1);
+        console.log("User Offline: "+removedUser.toString())
     }
 
     static findIndexBySocketId(socketid: string){

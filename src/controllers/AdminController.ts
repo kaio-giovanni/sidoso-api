@@ -8,9 +8,62 @@ import { TokenJwt } from '../authentication/TokenJwt';
 import { Associado } from '../models/Associado';
 import { PagConsulta } from '../models/PagConsulta';
 import connection from '../database/connection';
+import fs from 'fs';
+import path from 'path';
 
 class AdminController {
 
+    //get static files list (Ex: images)
+    public async getStaticFiles(req: Request, res: Response){
+        const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+        if(!vrfyRole.success)
+            return res.status(403).send(vrfyRole.body);
+
+        const type = req.query.type;
+        let files: string[] = [];
+        try {
+            switch(type){
+                case 'img':
+                    files = fs.readdirSync(path.join(__dirname, '..', '..','public', 'images'));
+                    break;
+                case undefined:
+                    files[0] = "unspecified file type";
+                    break;
+                default:
+                    files = []
+                    break;
+            }
+
+            return res.status(200).send({ "type": type, "content": files });
+        }catch(error){
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        }
+    }
+
+    // delete static files (Ex: image files)
+    public async delImageFiles(req: Request, res: Response){
+        const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+        if(!vrfyRole.success)
+            return res.status(403).send(vrfyRole.body);
+
+        const { filename } = req.query;
+
+        if (!filename)
+            return res.status(406).send({
+                error: "An error has occurred",
+                message: "no filename provided"
+            });
+
+        fs.unlink(path.join(__dirname, '..', '..', 'public', 'images') + "/" + filename, (error) => {
+            if (error) 
+                return res.status(406).send({ error: "An error has occurred", message: error });
+
+            return res.status(200).send({ message: "successfully deleted " + filename });
+        });
+    }
+    
     // login admin
     public async login(req: Request, res: Response){
         connection.then(async conn => {
