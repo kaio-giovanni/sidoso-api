@@ -1,4 +1,4 @@
-import authConfig from '../config/auth';
+import authConfig from '../../config/auth';
 import jwt from 'jsonwebtoken';
 
 enum Role {

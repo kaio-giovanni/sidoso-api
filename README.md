@@ -1,4 +1,4 @@
-# S-idoso API 
+# Sidoso API 
 
 ## Descrição
 
@@ -7,10 +7,11 @@ A API irá ser consumida pelos módulos de Pacientes e Profissionais (frontend)
 
 ## Funcionalidades
 
-- [ ] Salvar informações de registro dos usuários (pacientes e profissionais) no banco de dados
-- [ ] Login na aplicação
-- [ ] Autenticação em rotas por meio de tokens de autenticação
-- [ ] Gerenciar toda regra de negócios envolvendo as entidades da aplicação
+- [x] Salvar informações de registro dos usuários (pacientes e profissionais) no banco de dados
+- [x] Gerenciar a aplicação com usuário Administrador
+- [x] Cadastro e Login
+- [x] Autenticação em rotas por meio de tokens de autenticação
+- [x] Conversas em tempo real utilizando WebSockets
 
 ## Licença
 

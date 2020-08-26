@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { TokenJwt } from '../authentication/TokenJwt';
+import { TokenJwt } from './TokenJwt';
 
 /** 
  * Check token authentication

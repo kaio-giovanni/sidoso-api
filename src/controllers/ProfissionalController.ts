@@ -3,7 +3,7 @@ import { Profissional } from '../models/Profissional';
 import { Consulta } from '../models/Consulta';
 import { ProfEspec } from '../models/ProfEspec';
 import { PagConsulta } from '../models/PagConsulta';
-import { TokenJwt } from '../authentication/TokenJwt';
+import { TokenJwt } from '../middlewares/auth/TokenJwt';
 import connection from '../database/connection';
 
 

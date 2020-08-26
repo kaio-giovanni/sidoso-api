@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import authentication from './middlewares/auth';
+import authentication from './middlewares/auth/auth';
 import multer from 'multer';
 import multerConfigs from './config/multer';
 

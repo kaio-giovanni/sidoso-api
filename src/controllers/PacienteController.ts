@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Paciente } from '../models/Paciente';
 import { Consulta } from '../models/Consulta';
-import { TokenJwt } from '../authentication/TokenJwt';
+import { TokenJwt } from '../middlewares/auth/TokenJwt';
 import connection from '../database/connection';
 
 class PacienteController {

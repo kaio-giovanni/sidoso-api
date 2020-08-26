@@ -4,7 +4,7 @@ import { Paciente } from '../models/Paciente';
 import { Profissional } from '../models/Profissional';
 import { Profissao } from '../models/Profissao';
 import { Especialidade } from '../models/Especialidade';
-import { TokenJwt } from '../authentication/TokenJwt';
+import { TokenJwt } from '../middlewares/auth/TokenJwt';
 import { Associado } from '../models/Associado';
 import { PagConsulta } from '../models/PagConsulta';
 import connection from '../database/connection';
