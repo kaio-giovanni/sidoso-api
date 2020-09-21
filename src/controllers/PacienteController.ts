@@ -220,8 +220,8 @@ class PacienteController {
                     .leftJoinAndSelect("profissional.profespec", "profespec")
                     .leftJoinAndSelect("profespec.especialidade", "especialidade")
                     .select([
-                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
-                        "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.photo",
+                        "profissional.birth", "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
                         "profissional.email", "profissao.name", "profespec.id", "especialidade.name", "especialidade.description"
                     ])
                     .where("profissional.is_active =:active", { active: 1})
