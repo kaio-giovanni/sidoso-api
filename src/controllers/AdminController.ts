@@ -143,14 +143,18 @@ class AdminController {
     // get all pacientes
     public async getAllPacientes(req: Request, res: Response){
         connection.then(async conn => {
-            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
-
-            if(!vrfyRole.success)
-                return res.status(403).send(vrfyRole.body);
 
             const pacienteRepository = conn.getRepository(Paciente);
             try{
-                const pacientes = await pacienteRepository.find({ where: { is_active: 1 } });
+                const pacientes = await pacienteRepository.findOneOrFail({
+                    select: [
+                        "id", "is_active", "photo", "name", "birth",
+                        "genre", "phone_main", "phone_secondary", "email"
+                    ],
+                    where: {
+                        is_active: 1
+                    }
+                });
                 return res.status(200).send(pacientes); 
             }catch(error){
                 return res.status(401).send({
@@ -202,10 +206,6 @@ class AdminController {
     // get all profissionais
     public async getAllProfissionais(req: Request, res: Response){
         connection.then(async conn => {
-            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
-
-            if(!vrfyRole.success)
-                return res.status(403).send(vrfyRole.body);
 
             const profissionalRepository = conn.getRepository(Profissional);
          
@@ -214,6 +214,12 @@ class AdminController {
                     .leftJoinAndSelect("profissional.profissao", "profissao")
                     .leftJoinAndSelect("profissional.profespec", "profespec")
                     .leftJoinAndSelect("profespec.especialidade", "especialidade")
+                    .select([
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
+                        "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.email", "profissao.name", "profespec.id", "especialidade.name", "especialidade.description"
+                    ])
+                    .where("profissional.is_active =:active", { active: 1})
                     .getMany();
                 return res.status(200).send(profissionais);
             }catch(error){
@@ -359,14 +365,16 @@ class AdminController {
     // get all associados
     public async getAllAssociados(req: Request, res: Response){
         connection.then(async conn => {
-            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
-
-            if(!vrfyRole.success)
-                return res.status(403).send(vrfyRole.body);
-
+            
             const associadoRepository = conn.getRepository(Associado);
             try{
-                const associados = await associadoRepository.find({  });
+                const associados = await associadoRepository.createQueryBuilder("associado")
+                    .select([
+                        "id", "name", "is_active", "phone_main", "phone_secondary",
+                        "email", "latitude", "longitude", "logo", "update_at"
+                    ])
+                    .where("associado.is_active =:active", { active: 1 })
+                    .getMany();
                 
                 return res.status(200).send(associados); 
             }catch(error){
