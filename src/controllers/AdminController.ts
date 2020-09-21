@@ -143,6 +143,10 @@ class AdminController {
     // get all pacientes
     public async getAllPacientes(req: Request, res: Response){
         connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
 
             const pacienteRepository = conn.getRepository(Paciente);
             try{
@@ -206,6 +210,10 @@ class AdminController {
     // get all profissionais
     public async getAllProfissionais(req: Request, res: Response){
         connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
 
             const profissionalRepository = conn.getRepository(Profissional);
          
@@ -365,6 +373,10 @@ class AdminController {
     // get all associados
     public async getAllAssociados(req: Request, res: Response){
         connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
             
             const associadoRepository = conn.getRepository(Associado);
             try{

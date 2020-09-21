@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { Paciente } from '../models/Paciente';
 import { Consulta } from '../models/Consulta';
+import { Profissional } from '../models/Profissional';
+import { Associado } from '../models/Associado';
 import { TokenJwt } from '../middlewares/auth/TokenJwt';
 import connection from '../database/connection';
 
@@ -200,6 +202,68 @@ class PacienteController {
             }
         }).catch((error) => {
             return res.status(406).send({ error: "An error has occured", message: error });
+        });
+    }
+
+    public async getAllProfissionais(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const profissionalRepository = conn.getRepository(Profissional);
+         
+            try{
+                const profissionais = await profissionalRepository.createQueryBuilder("profissional")
+                    .leftJoinAndSelect("profissional.profissao", "profissao")
+                    .leftJoinAndSelect("profissional.profespec", "profespec")
+                    .leftJoinAndSelect("profespec.especialidade", "especialidade")
+                    .select([
+                        "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
+                        "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
+                        "profissional.email", "profissao.name", "profespec.id", "especialidade.name", "especialidade.description"
+                    ])
+                    .where("profissional.is_active =:active", { active: 1})
+                    .getMany();
+                return res.status(200).send(profissionais);
+            }catch(error){
+                return res.status(401).send({
+                    error: "User not found",
+                    message: error
+                });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    public async getAllAssociados(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+            
+            const associadoRepository = conn.getRepository(Associado);
+            try{
+                const associados = await associadoRepository.createQueryBuilder("associado")
+                    .select([
+                        "id", "name", "is_active", "phone_main", "phone_secondary",
+                        "email", "latitude", "longitude", "logo", "update_at"
+                    ])
+                    .where("associado.is_active =:active", { active: 1 })
+                    .getMany();
+                
+                return res.status(200).send(associados); 
+            }catch(error){
+                return res.status(401).send({
+                    error: "Associado not found",
+                    message: error
+                });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
         });
     }
 }
