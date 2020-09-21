@@ -33,6 +33,10 @@ routes.patch('/paciente/:id/editar/', [authentication, multer(multerConfigs).sin
 
 routes.get('/paciente/:id/consulta/', [authentication], pacienteController.getConsultas);
 
+routes.get('/paciente/:id/profissionais/', [authentication], pacienteController.getAllProfissionais);
+
+routes.get('/paciente/:id/associados/', [authentication], pacienteController.getAllAssociados);
+
 /* --------------------PROFISSIONAL ROUTES-------------------- */
 
 routes.post('/login/profissional/', profissionalController.login);
