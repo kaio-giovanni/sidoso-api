@@ -13,6 +13,12 @@ export class Associado {
     })
     name!: string;
 
+    /* associado type */
+    @Column({
+        name: "type", type: "varchar", length: 120, nullable: false
+    })
+    type!: string;
+
     /* is active ? */
     @Column({
         name: "is_active", type: "boolean", default: "1", nullable: false

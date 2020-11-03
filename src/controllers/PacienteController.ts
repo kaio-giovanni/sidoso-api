@@ -248,13 +248,12 @@ class PacienteController {
             
             const associadoRepository = conn.getRepository(Associado);
             try{
-                const associados = await associadoRepository.createQueryBuilder("associado")
-                    .select([
-                        "id", "name", "is_active", "phone_main", "phone_secondary",
-                        "email", "latitude", "longitude", "logo", "update_at"
-                    ])
-                    .where("associado.is_active =:active", { active: 1 })
-                    .getMany();
+                const associados = await associadoRepository.find(
+                    {
+                        where: {
+                            is_active: 1
+                    } 
+                });
                 
                 return res.status(200).send(associados); 
             }catch(error){

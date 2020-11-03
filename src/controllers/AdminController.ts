@@ -351,6 +351,7 @@ class AdminController {
             const associado = associadoRepository.create();
             try{
                 associado.name = req.body.name;
+                associado.type = req.body.type;
                 associado.cnpj = req.body.cnpj;
                 associado.phone_main = req.body.phone_main;
                 associado.phone_secondary = req.body.phone_secondary;
@@ -380,15 +381,14 @@ class AdminController {
             
             const associadoRepository = conn.getRepository(Associado);
             try{
-                const associados = await associadoRepository.createQueryBuilder("associado")
-                    .select([
-                        "id", "name", "is_active", "phone_main", "phone_secondary",
-                        "email", "latitude", "longitude", "logo", "update_at"
-                    ])
-                    .where("associado.is_active =:active", { active: 1 })
-                    .getMany();
-                
-                return res.status(200).send(associados); 
+                const associados = await associadoRepository.find(
+                    {
+                        where: {
+                            is_active: 1
+                    } 
+                });
+
+                return res.status(200).send(associados);
             }catch(error){
                 return res.status(401).send({
                     error: "Associado not found",
