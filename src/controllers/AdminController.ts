@@ -150,7 +150,7 @@ class AdminController {
 
             const pacienteRepository = conn.getRepository(Paciente);
             try{
-                const pacientes = await pacienteRepository.findOneOrFail({
+                const pacientes = await pacienteRepository.find({
                     select: [
                         "id", "is_active", "photo", "name", "birth",
                         "genre", "phone_main", "phone_secondary", "email"
