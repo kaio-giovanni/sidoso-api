@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Profissional } from '../models/Profissional';
+import { Paciente } from '../models/Paciente';
 import { Consulta } from '../models/Consulta';
 import { ProfEspec } from '../models/ProfEspec';
 import { PagConsulta } from '../models/PagConsulta';
@@ -176,6 +177,36 @@ class ProfissionalController {
             }
         }).catch((error) => {
             return res.status(406).send({ error: "An error has occured", message: error });
+        });
+    }
+
+    // get All Pacientes
+    public async getAllPacientes(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PROFISSIONAL);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const pacienteRepository = conn.getRepository(Paciente);
+
+            try{
+                const pacientes = await pacienteRepository.createQueryBuilder("paciente")
+                    .select([
+                        "paciente.id", "paciente.is_active", "paciente.photo", "paciente.name", "paciente.birth",
+                        "paciente.genre", "paciente.phone_main", "paciente.phone_secondary", "paciente.email"
+                    ])
+                    .where("paciente.is_active =:active", { active: 1 })
+                    .getMany();
+                return res.status(200).send(pacientes);
+            }catch(error){
+                return res.status(401).send({
+                    error: "User not found",
+                    message: error
+                });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
         });
     }
 

@@ -49,6 +49,8 @@ routes.post('/profissional/:id/consulta/marcar/', [authentication], profissional
 
 routes.get('/profissional/:id/consulta/', [authentication], profissionalController.getConsultas);
 
+routes.get('/profissional/:id/pacientes/', [authentication], profissionalController.getAllPacientes);
+
 routes.get('/profissional/:id/financeiro/', [authentication], profissionalController.getFinancial);
 
 /* --------------------ADMIN ROUTES-------------------- */
