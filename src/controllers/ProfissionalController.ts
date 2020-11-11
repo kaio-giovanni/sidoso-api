@@ -158,6 +158,7 @@ class ProfissionalController {
             try{
                 const consultas = await consultaRepository.createQueryBuilder("consulta")
                     .leftJoinAndSelect("consulta.profissional", "profissional")
+                    .leftJoinAndSelect("profissional.profissao", "profissao")
                     .leftJoinAndSelect("consulta.paciente", "paciente")
                     .select([
                         "consulta.id", "consulta.title", "consulta.date", "consulta.latitude", "consulta.longitude", "consulta.status",
@@ -165,6 +166,7 @@ class ProfissionalController {
                         "profissional.id", "profissional.is_active", "profissional.name", "profissional.birth",
                         "profissional.cpf", "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
                         "profissional.email",
+                        "profissao.id", "profissao.name",
                         "paciente.id", "paciente.is_active", "paciente.name", "paciente.birth", "paciente.cpf", "paciente.genre", "paciente.phone_main",
                         "paciente.phone_secondary", "paciente.email"
                     ])
