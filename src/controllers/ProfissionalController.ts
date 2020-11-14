@@ -182,6 +182,32 @@ class ProfissionalController {
         });
     }
 
+    // update consulta
+    public async updateConsulta(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PROFISSIONAL);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const { consultaId, newStatus } = req.body;
+
+            const consultaRepository = conn.getRepository(Consulta);
+            try{
+                if(newStatus == null){
+                    return res.status(400).send({ error: "Editing failure", message: "No value for new status" });
+                }
+                await consultaRepository.update(consultaId, { status: newStatus });
+
+                return res.status(200).send({ success: true });
+            }catch(error){
+                return res.status(400).send({ error: "Editing failure", message: error });
+            }
+        }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
     // get All Pacientes
     public async getAllPacientes(req: Request, res: Response){
         connection.then(async conn => {
