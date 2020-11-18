@@ -9,7 +9,7 @@ export default {
      String: * - A wildcard to allow current request origin
      Function - Receives the current origin and should return one of the above values.  
     */
-    origin: false,
+    origin: ['https://sidosoadmin.herokuapp.com'],
   
     /* ---- Methods ----
      HTTP methods to be allowed. The value can be one of the following
@@ -27,7 +27,11 @@ export default {
      Array - An array of allowed headers
      String: * - A wildcard to allow current request headers
     */
-    allowedHeaders: [],
+    allowedHeaders: [
+      "content-lenght",
+      "content-type",
+      "Authorization"
+    ],
   
     /*---- Expose Headers ----
      A list of headers to be exposed via `Access-Control-Expose-Headers`
@@ -36,7 +40,9 @@ export default {
      String: Comma separated list of allowed headers
      Array - An array of allowed headers  
     */
-    exposedHeaders: [],
+    exposedHeaders: [
+      "Authorization"
+    ],
   
     /* ---- Credentials ----
      Define Access-Control-Allow-Credentials header. It should always be a
