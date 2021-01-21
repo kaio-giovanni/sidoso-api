@@ -57,14 +57,17 @@ routes.get('/profissional/:id/financeiro/', [authentication], profissionalContro
 
 /* --------------------ADMIN ROUTES-------------------- */
 
-// register a new admin (Need pre-authentication )
-routes.post('/admin/:id/registrar/administrador/', [authentication], adminController.store);
+routes.post('/registrar/admin/', adminController.store);
 
 routes.post('/login/admin/', adminController.login);
 
 routes.get('/admin/:id/paciente/', [authentication], adminController.getAllPacientes);
 
+routes.delete('/admin/:id/paciente', [authentication], adminController.deletePaciente);
+
 routes.get('/admin/:id/profissional/', [authentication], adminController.getAllProfissionais);
+
+routes.delete('/admin/:id/profissional', [authentication], adminController.deleteProfissional);
 
 routes.post('/admin/:id/registrar/profissional/', [authentication, multer(multerConfigs).single('photo')], adminController.createProfissional);
 
