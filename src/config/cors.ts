@@ -9,7 +9,7 @@ export default {
      String: * - A wildcard to allow current request origin
      Function - Receives the current origin and should return one of the above values.  
     */
-    origin: ['https://sidosoadmin.herokuapp.com'],
+    origin: ['https://healthtechnology.herokuapp.com/'],
   
     /* ---- Methods ----
      HTTP methods to be allowed. The value can be one of the following
