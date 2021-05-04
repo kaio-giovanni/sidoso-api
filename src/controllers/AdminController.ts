@@ -111,11 +111,6 @@ class AdminController {
     // create a new admin
     public async store(req: Request, res: Response){
         connection.then(async conn => {
-            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
-
-            if(!vrfyRole.success)
-                return res.status(403).send(vrfyRole.body);
-
             const data = req.body;
 
             const adminRepository = conn.getRepository(Admin);
@@ -167,6 +162,56 @@ class AdminController {
                 });
             }
         }).catch((error) => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    // set paciente.is_active to false
+    public async deletePaciente(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const { pacienteId } = req.body;
+           
+            const pacienteRepository = conn.getRepository(Paciente);
+            try{
+                await pacienteRepository.update(pacienteId, {
+                    is_active: false
+                });
+
+                return res.status(200).send({ success: true });
+            }catch(error){
+                return res.status(400).send({ error: "Editing failure", message: error });
+            }
+
+        }).catch(error => {
+            return res.status(406).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    public async deleteProfissional(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const { profissionalId } = req.body;
+
+            const profissionalRepository = conn.getRepository(Profissional);
+            try {
+                await profissionalRepository.update(profissionalId, {
+                    is_active: false
+                });
+
+                return res.status(200).send({ success: true });
+            }catch(error){
+                return res.status(400).send({ error: "Editing failure", message: error });
+            }
+        }).catch(error => {
             return res.status(406).send({ error: "An error has occurred", message: error });
         });
     }

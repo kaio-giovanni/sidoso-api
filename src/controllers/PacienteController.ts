@@ -144,32 +144,6 @@ class PacienteController {
         });
     }
 
-    // set paciente.is_active to false
-    public async destroy(req: Request, res: Response){
-        connection.then(async conn => {
-            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.PACIENTE);
-
-            if(!vrfyRole.success)
-                return res.status(403).send(vrfyRole.body);
-
-            const userId = req.params.id;
-           
-            const pacienteRepository = conn.getRepository(Paciente);
-            try{
-                await pacienteRepository.update(userId, {
-                    is_active: false
-                });
-
-                return res.status(200).send({ success: true });
-            }catch(error){
-                return res.status(400).send({ error: "Editing failure", message: error });
-            }
-
-        }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
-        });
-    }
-
     // get consultas
     public async getConsultas(req: Request, res: Response){
         connection.then(async conn => {
