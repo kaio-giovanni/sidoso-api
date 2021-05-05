@@ -33,7 +33,7 @@ const authentication = async (req: Request, res: Response, next: NextFunction) =
             return res.status(403).send({ error: "Authentication failed", message: result.body});
         }
     }else{
-        if(req.params.id != result.body.decoded.userId) 
+        if(req.params.id != result.body.decoded.userId && result.body.decoded.role != TokenJwt.role.ADMIN) 
             return res.status(403).send({ error: "Authentication failed", message: "Access denied!" });
         
         // set authorization header: prefix + token + user role 
