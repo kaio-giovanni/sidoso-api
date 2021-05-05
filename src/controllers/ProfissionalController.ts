@@ -50,7 +50,7 @@ class ProfissionalController {
             res.setHeader("authorization", token);
             return res.status(200).send(prof); 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", mesage: error }); 
+            return res.status(500).send({ error: "An error has occurred", mesage: error }); 
         });
     }
 
@@ -84,7 +84,7 @@ class ProfissionalController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -109,7 +109,7 @@ class ProfissionalController {
             }
 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -141,7 +141,7 @@ class ProfissionalController {
                 return res.status(400).send({ error: "Register failed", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error as occured", message: error })
+            return res.status(500).send({ error: "An error as occured", message: error })
         });
     }
 
@@ -178,7 +178,7 @@ class ProfissionalController {
                 return res.status(401).send({ error: "Error in get consulta", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occured", message: error });
+            return res.status(500).send({ error: "An error has occured", message: error });
         });
     }
 
@@ -204,7 +204,7 @@ class ProfissionalController {
                 return res.status(400).send({ error: "Editing failure", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -234,7 +234,7 @@ class ProfissionalController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -272,7 +272,7 @@ class ProfissionalController {
                 return res.status(401).send({ error: "Error in get consultation payment", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error })
+            return res.status(500).send({ error: "An error has occurred", message: error })
         });
     }
 }

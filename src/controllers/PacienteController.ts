@@ -35,7 +35,7 @@ class PacienteController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -79,7 +79,7 @@ class PacienteController {
             res.setHeader("authorization", token);
             return res.status(200).send(paciente); 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", mesage: error });
+            return res.status(500).send({ error: "An error has occurred", mesage: error });
         });
     }
 
@@ -110,7 +110,7 @@ class PacienteController {
             }
 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -140,7 +140,7 @@ class PacienteController {
             }
 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -177,7 +177,7 @@ class PacienteController {
                 return res.status(401).send({ error: "Error in get consulta", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occured", message: error });
+            return res.status(500).send({ error: "An error has occured", message: error });
         });
     }
 
@@ -211,7 +211,7 @@ class PacienteController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -239,7 +239,7 @@ class PacienteController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 }
