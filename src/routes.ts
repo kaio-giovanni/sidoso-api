@@ -49,7 +49,7 @@ routes.post('/profissional/:id/consulta/marcar/', [authentication], profissional
 
 routes.get('/profissional/:id/consulta/', [authentication], profissionalController.getConsultas);
 
-routes.patch('/profissional/:id/consulta/editar', [authentication], profissionalController.updateConsulta);
+routes.patch('/profissional/:id/consulta/editar/', [authentication], profissionalController.updateConsulta);
 
 routes.get('/profissional/:id/pacientes/', [authentication], profissionalController.getAllPacientes);
 
@@ -63,11 +63,11 @@ routes.post('/login/admin/', adminController.login);
 
 routes.get('/admin/:id/paciente/', [authentication], adminController.getAllPacientes);
 
-routes.delete('/admin/:id/paciente', [authentication], adminController.deletePaciente);
+routes.delete('/admin/:id/paciente/', [authentication], adminController.deletePaciente);
 
 routes.get('/admin/:id/profissional/', [authentication], adminController.getAllProfissionais);
 
-routes.delete('/admin/:id/profissional', [authentication], adminController.deleteProfissional);
+routes.delete('/admin/:id/profissional/', [authentication], adminController.deleteProfissional);
 
 routes.post('/admin/:id/registrar/profissional/', [authentication, multer(multerConfigs).single('photo')], adminController.createProfissional);
 
@@ -84,6 +84,8 @@ routes.post('/admin/:id/registrar/associado/', [authentication, multer(multerCon
 routes.get('/admin/:id/associado/', [authentication], adminController.getAllAssociados);
 
 routes.post('/admin/:id/consulta/pagamento/', [authentication], adminController.payConsulta);
+
+routes.delete('/admin/:id/associado/', [authentication], adminController.deleteAssociado);
 
 routes.get('/admin/:id/resources/', [authentication], adminController.getStaticFiles);
 
