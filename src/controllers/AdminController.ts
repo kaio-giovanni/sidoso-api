@@ -37,7 +37,7 @@ class AdminController {
 
             return res.status(200).send({ "type": type, "content": files });
         }catch(error){
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         }
     }
 
@@ -51,14 +51,14 @@ class AdminController {
         const { filename } = req.query;
 
         if (!filename)
-            return res.status(406).send({
+            return res.status(400).send({
                 error: "An error has occurred",
                 message: "no filename provided"
             });
 
         fs.unlink(path.join(__dirname, '..', '..', 'public', 'images') + "/" + filename, (error) => {
             if (error) 
-                return res.status(406).send({ error: "An error has occurred", message: error });
+                return res.status(500).send({ error: "An error has occurred", message: error });
 
             return res.status(200).send({ message: "successfully deleted " + filename });
         });
@@ -104,7 +104,7 @@ class AdminController {
             res.setHeader("authorization", token);
             return res.status(200).send(admin); 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", mesage: error }); 
+            return res.status(500).send({ error: "An error has occurred", mesage: error }); 
         });
     }
 
@@ -131,7 +131,7 @@ class AdminController {
             }
 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -162,7 +162,7 @@ class AdminController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -174,11 +174,11 @@ class AdminController {
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            const { pacienteId } = req.body;
+            const { id } = req.params;
            
             const pacienteRepository = conn.getRepository(Paciente);
             try{
-                await pacienteRepository.update(pacienteId, {
+                await pacienteRepository.update(id, {
                     is_active: false
                 });
 
@@ -188,7 +188,7 @@ class AdminController {
             }
 
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -199,11 +199,11 @@ class AdminController {
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            const { profissionalId } = req.body;
+            const { id } = req.params;
 
             const profissionalRepository = conn.getRepository(Profissional);
             try {
-                await profissionalRepository.update(profissionalId, {
+                await profissionalRepository.update(id, {
                     is_active: false
                 });
 
@@ -212,7 +212,31 @@ class AdminController {
                 return res.status(400).send({ error: "Editing failure", message: error });
             }
         }).catch(error => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
+        });
+    }
+
+    public async deleteAssociado(req: Request, res: Response){
+        connection.then(async conn => {
+            const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
+
+            if(!vrfyRole.success)
+                return res.status(403).send(vrfyRole.body);
+
+            const { id } = req.params;
+
+            const associadoRepository = conn.getRepository(Associado);
+            try {
+                await associadoRepository.update(id, {
+                    is_active: false
+                });
+
+                return res.status(200).send({ success: true });
+            }catch(error){
+                return res.status(400).send({ error: "Editing failure", message: error });
+            }
+        }).catch(error => {
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -248,7 +272,7 @@ class AdminController {
                 return res.status(400).send({ error: "Registration failure", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -282,7 +306,7 @@ class AdminController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -307,7 +331,7 @@ class AdminController {
             }
     
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -330,7 +354,7 @@ class AdminController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -355,7 +379,7 @@ class AdminController {
                 return res.status(400).send({ error: "Registration failure", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -380,7 +404,7 @@ class AdminController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -412,7 +436,7 @@ class AdminController {
                 return res.status(400).send({ error: "Registration failure", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error as occured", message: error });
+            return res.status(500).send({ error: "An error as occured", message: error });
         });
     }
 
@@ -441,7 +465,7 @@ class AdminController {
                 });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 
@@ -469,7 +493,7 @@ class AdminController {
                 return res.status(400).send({ error: "Error making payment", message: error });
             }
         }).catch((error) => {
-            return res.status(406).send({ error: "An error has occurred", message: error });
+            return res.status(500).send({ error: "An error has occurred", message: error });
         });
     }
 }
