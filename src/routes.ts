@@ -85,6 +85,8 @@ routes.get('/admin/:id/associado/', [authentication], adminController.getAllAsso
 
 routes.post('/admin/:id/consulta/pagamento/', [authentication], adminController.payConsulta);
 
+routes.delete('/admin/:id/profissional', [authentication], adminController.deleteAssociado);
+
 routes.get('/admin/:id/resources/', [authentication], adminController.getStaticFiles);
 
 routes.delete('/admin/:id/resources/images/', [authentication], adminController.delImageFiles);
