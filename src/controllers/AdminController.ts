@@ -12,57 +12,6 @@ import fs from 'fs';
 import path from 'path';
 
 class AdminController {
-
-    //get static files list (Ex: images)
-    public async getStaticFiles(req: Request, res: Response){
-        const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
-
-        if(!vrfyRole.success)
-            return res.status(403).send(vrfyRole.body);
-
-        const type = req.query.type;
-        let files: string[] = [];
-        try {
-            switch(type){
-                case 'img':
-                    files = fs.readdirSync(path.join(__dirname, '..', '..','public', 'images'));
-                    break;
-                case undefined:
-                    files[0] = "unspecified file type";
-                    break;
-                default:
-                    files = []
-                    break;
-            }
-
-            return res.status(200).send({ "type": type, "content": files });
-        }catch(error){
-            return res.status(500).send({ error: "An error has occurred", message: error });
-        }
-    }
-
-    // delete static files (Ex: image files)
-    public async delImageFiles(req: Request, res: Response){
-        const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
-
-        if(!vrfyRole.success)
-            return res.status(403).send(vrfyRole.body);
-
-        const { filename } = req.query;
-
-        if (!filename)
-            return res.status(400).send({
-                error: "An error has occurred",
-                message: "no filename provided"
-            });
-
-        fs.unlink(path.join(__dirname, '..', '..', 'public', 'images') + "/" + filename, (error) => {
-            if (error) 
-                return res.status(500).send({ error: "An error has occurred", message: error });
-
-            return res.status(200).send({ message: "successfully deleted " + filename });
-        });
-    }
     
     // login admin
     public async login(req: Request, res: Response){
@@ -150,9 +99,6 @@ class AdminController {
                         "id", "is_active", "photo", "name", "birth",
                         "genre", "phone_main", "phone_secondary", "email"
                     ],
-                    where: {
-                        is_active: 1
-                    }
                 });
                 return res.status(200).send(pacientes); 
             }catch(error){
@@ -166,20 +112,19 @@ class AdminController {
         });
     }
 
-    // set paciente.is_active to false
-    public async deletePaciente(req: Request, res: Response){
+    public async setStatusPaciente(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            const { id } = req.params;
+            const { pacienteId, active } = req.body;
            
             const pacienteRepository = conn.getRepository(Paciente);
             try{
-                await pacienteRepository.update(id, {
-                    is_active: false
+                await pacienteRepository.update(pacienteId, {
+                    is_active: active
                 });
 
                 return res.status(200).send({ success: true });
@@ -192,19 +137,19 @@ class AdminController {
         });
     }
 
-    public async deleteProfissional(req: Request, res: Response){
+    public async setStatusProfissional(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            const { id } = req.params;
+            const { profissionalId, active } = req.body;
 
             const profissionalRepository = conn.getRepository(Profissional);
             try {
-                await profissionalRepository.update(id, {
-                    is_active: false
+                await profissionalRepository.update(profissionalId, {
+                    is_active: active
                 });
 
                 return res.status(200).send({ success: true });
@@ -216,19 +161,19 @@ class AdminController {
         });
     }
 
-    public async deleteAssociado(req: Request, res: Response){
+    public async setStatusAssociado(req: Request, res: Response){
         connection.then(async conn => {
             const vrfyRole = TokenJwt.verifyRole(req.headers.authorization!, TokenJwt.role.ADMIN);
 
             if(!vrfyRole.success)
                 return res.status(403).send(vrfyRole.body);
 
-            const { id } = req.params;
+            const { associadoId, active } = req.body;
 
             const associadoRepository = conn.getRepository(Associado);
             try {
-                await associadoRepository.update(id, {
-                    is_active: false
+                await associadoRepository.update(associadoId, {
+                    is_active: active
                 });
 
                 return res.status(200).send({ success: true });
@@ -296,7 +241,6 @@ class AdminController {
                         "profissional.genre", "profissional.phone_main", "profissional.phone_secondary",
                         "profissional.email", "profissao.name", "profespec.id", "especialidade.name", "especialidade.description"
                     ])
-                    .where("profissional.is_active =:active", { active: 1})
                     .getMany();
                 return res.status(200).send(profissionais);
             }catch(error){
@@ -450,12 +394,7 @@ class AdminController {
             
             const associadoRepository = conn.getRepository(Associado);
             try{
-                const associados = await associadoRepository.find(
-                    {
-                        where: {
-                            is_active: 1
-                    } 
-                });
+                const associados = await associadoRepository.find();
 
                 return res.status(200).send(associados);
             }catch(error){
