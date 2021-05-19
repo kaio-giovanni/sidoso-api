@@ -63,11 +63,11 @@ routes.post('/login/admin/', adminController.login);
 
 routes.get('/admin/:id/paciente/', [authentication], adminController.getAllPacientes);
 
-routes.delete('/admin/:id/paciente/', [authentication], adminController.deletePaciente);
+routes.patch('/admin/:id/paciente/', [authentication], adminController.setStatusPaciente);
 
 routes.get('/admin/:id/profissional/', [authentication], adminController.getAllProfissionais);
 
-routes.delete('/admin/:id/profissional/', [authentication], adminController.deleteProfissional);
+routes.patch('/admin/:id/profissional/', [authentication], adminController.setStatusProfissional);
 
 routes.post('/admin/:id/registrar/profissional/', [authentication, multer(multerConfigs).single('photo')], adminController.createProfissional);
 
@@ -85,10 +85,6 @@ routes.get('/admin/:id/associado/', [authentication], adminController.getAllAsso
 
 routes.post('/admin/:id/consulta/pagamento/', [authentication], adminController.payConsulta);
 
-routes.delete('/admin/:id/associado/', [authentication], adminController.deleteAssociado);
-
-routes.get('/admin/:id/resources/', [authentication], adminController.getStaticFiles);
-
-routes.delete('/admin/:id/resources/images/', [authentication], adminController.delImageFiles);
+routes.patch('/admin/:id/associado/', [authentication], adminController.setStatusAssociado);
 
 export default routes;
