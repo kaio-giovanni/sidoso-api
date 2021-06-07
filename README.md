@@ -2,7 +2,7 @@
 
 ## Descrição
 
-Construção do backend da aplicação S-idoso (Saúde do idoso).
+Construção do backend da aplicação sidosoapi.
 A API irá ser consumida pelos módulos de Pacientes e Profissionais (frontend)
 
 ## Funcionalidades
@@ -11,15 +11,11 @@ A API irá ser consumida pelos módulos de Pacientes e Profissionais (frontend)
 - [x] Gerenciar a aplicação com usuário Administrador
 - [x] Cadastro e Login
 - [x] Autenticação em rotas por meio de tokens de autenticação
-- [x] Conversas em tempo real utilizando WebSockets
+- [x] Conversas em tempo real utilizando WebSocket
 
 ## Licença
 
 - Esse software está sob a licença [Apache-2.0](https://apache.org/licenses/LICENSE-2.0)
-
-## Redes sociais
-
-- [Instagram](https://instagram.com/_sidoso)
 
 ## Autor
 
